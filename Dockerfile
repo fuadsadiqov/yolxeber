@@ -1,13 +1,15 @@
 # ── 1. Asılılıqlar ─────────────────────────────────────────────
-FROM node:20-alpine AS deps
-RUN corepack enable
+# pnpm 11 Node >= 22.13 tələb edir. pnpm corepack əvəzinə npm ilə dəqiq versiyada quraşdırılır
+# (corepack-in köhnə imza açarları bəzən yeni pnpm buraxılışlarını rədd edir).
+FROM node:22-alpine AS deps
+RUN npm install -g pnpm@11.11.0
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # ── 2. Build ──────────────────────────────────────────────────
-FROM node:20-alpine AS build
-RUN corepack enable
+FROM node:22-alpine AS build
+RUN npm install -g pnpm@11.11.0
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -15,7 +17,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 NEXT_STANDALONE=1
 RUN pnpm build
 
 # ── 3. İşləmə mühiti ──────────────────────────────────────────
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 # ffmpeg — videolardan metadata (GPS və s.) silmək üçün
 RUN apk add --no-cache ffmpeg
 WORKDIR /app

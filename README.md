@@ -11,7 +11,7 @@ Sürücülər yolda gördükləri dəyişiklikləri (yeni nişan, sürət limiti
 
 ## 1. Lokal işə salma (inkişaf)
 
-**Tələblər:** Node.js 20.6+, pnpm (`corepack enable`), Docker.
+**Tələblər:** Node.js 22.13+ (pnpm 11 bunu tələb edir), pnpm 11, Docker.
 
 ```bash
 pnpm install
