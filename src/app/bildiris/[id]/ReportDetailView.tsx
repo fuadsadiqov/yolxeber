@@ -1,0 +1,389 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { StatusBadge, STRIPES } from "@/components/report/bits";
+import { Icon, type IconName } from "@/components/ui/Icon";
+import { Sheet } from "@/components/ui/Sheet";
+import { useToast } from "@/components/ui/Toast";
+import { api, ApiError } from "@/lib/client/api";
+import { distanceM, useGeo } from "@/lib/client/geo";
+import { CATEGORIES } from "@/lib/categories";
+import { formatDistance, relativeTime } from "@/lib/format";
+import type { ReportDetail, ReportStatus, VoteKind } from "@/lib/types";
+
+const MapCanvas = dynamic(() => import("@/components/map/MapCanvas"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-map-bg" />,
+});
+
+const FLAG_REASONS = [
+  { value: "wrong", label: "Səhv və ya yanlış məlumat" },
+  { value: "spam", label: "Spam / reklam" },
+  { value: "offensive", label: "Təhqiramiz məzmun" },
+  { value: "privacy", label: "Şəxsi məlumat görünür (üz, nömrə nişanı)" },
+  { value: "other", label: "Digər" },
+] as const;
+
+export function ReportDetailView({ initial }: { initial: ReportDetail }) {
+  const router = useRouter();
+  const toast = useToast();
+  const { position } = useGeo();
+  const [r, setR] = useState(initial);
+  const [busy, setBusy] = useState<VoteKind | null>(null);
+  const [slide, setSlide] = useState(0);
+  const [flagOpen, setFlagOpen] = useState(false);
+  // Server və müştəri render-i eyni olsun deyə origin yalnız mount-dan sonra oxunur
+  const [origin, setOrigin] = useState("");
+  useEffect(() => setOrigin(location.origin), []);
+  const cat = CATEGORIES[r.category];
+
+  const dist = position ? distanceM(position, r) : r.distanceM;
+  const pin = useMemo(() => ({ lat: r.lat, lng: r.lng, category: r.category }), [r.lat, r.lng, r.category]);
+  const shareUrl = `${origin}/bildiris/${r.id}`;
+  const shareText = `${r.title}${r.address ? ` — ${r.address}` : ""} (YolXəbər)`;
+
+  async function vote(kind: VoteKind) {
+    setBusy(kind);
+    try {
+      const res = await api<{ status: ReportStatus; confirmCount: number; outdatedCount: number }>(`/api/reports/${r.id}/vote`, {
+        method: "POST",
+        json: { kind },
+      });
+      setR((x) => ({ ...x, ...res, myVote: kind }));
+      toast(kind === "confirm" ? "Təşəkkürlər! Təsdiqiniz qeydə alındı." : "Qeyd olundu. Təşəkkürlər!", { icon: "check" });
+    } catch (e) {
+      toast(e instanceof ApiError ? e.message : "Xəta baş verdi");
+      if (e instanceof ApiError && e.code === "already_voted") setR((x) => ({ ...x, myVote: x.myVote ?? kind }));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function share() {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: r.title, text: shareText, url: shareUrl });
+      } catch {
+        /* istifadəçi ləğv etdi */
+      }
+    } else copyLink();
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast("Link kopyalandı", { icon: "link" });
+    } catch {
+      toast(shareUrl);
+    }
+  }
+
+  const back = () => (history.length > 1 ? router.back() : router.push("/"));
+  const total = r.confirmCount + r.outdatedCount;
+
+  return (
+    <main className="mx-auto min-h-dvh max-w-[600px] bg-bg pb-6 md:my-6 md:overflow-hidden md:rounded-[28px]">
+      {/* Media karuseli */}
+      <div className="relative h-[320px] md:h-[380px]" style={{ background: STRIPES }}>
+        {r.media.length > 0 && (
+          <div
+            className="no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto"
+            onScroll={(e) => setSlide(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
+          >
+            {r.media.map((m, i) => (
+              <div key={m.id} className="h-full w-full flex-none snap-center">
+                {m.kind === "image" ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={m.url}
+                    alt={i === 0 ? r.title : ""}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <video
+                    src={m.url}
+                    poster={m.thumbUrl ?? undefined}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="h-full w-full bg-black object-contain"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="absolute inset-x-4 flex justify-between" style={{ top: "calc(env(safe-area-inset-top) + 8px)" }}>
+          <RoundButton icon="chevL" label="Geri" onClick={back} />
+          <RoundButton icon="share" label="Paylaş" onClick={share} />
+        </div>
+        {r.media.length > 1 && (
+          <span className="absolute bottom-4 right-4 flex h-7 items-center rounded-full bg-[rgba(22,33,28,.72)] px-2.5 text-xs font-semibold text-white">
+            {slide + 1} / {r.media.length}
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4 px-4 pb-2 pt-5">
+        {r.status === "outdated" && (
+          <div className="flex items-center gap-3 rounded-[14px] bg-line-soft px-3.5 py-3 text-muted">
+            <span className="h-5 w-5 flex-none">
+              <Icon name="ban" />
+            </span>
+            <span className="text-sm font-semibold">Sürücülər bu dəyişikliyin artıq aktual olmadığını bildirib. Bildiriş arxivdədir.</span>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2.5">
+          <div className="flex flex-wrap gap-2">
+            <span
+              className="flex h-[30px] items-center gap-1.5 rounded-full pl-1.5 pr-3 text-[13px] font-semibold"
+              style={{ background: cat.color, color: cat.fg }}
+            >
+              <span className="h-[18px] w-[18px]">
+                <Icon name={cat.icon} />
+              </span>
+              {cat.name}
+            </span>
+            <StatusBadge status={r.status} size="md" />
+          </div>
+          <h1 className="text-[26px] leading-tight font-bold text-balance">{r.title}</h1>
+          <div className="flex items-center gap-2 text-sm text-muted">
+            <span className="h-4 w-4">
+              <Icon name="clock" />
+            </span>
+            <time suppressHydrationWarning dateTime={r.createdAt} title={new Date(r.createdAt).toLocaleString("az-AZ")}>
+              {relativeTime(r.createdAt)}
+            </time>
+          </div>
+        </div>
+
+        {/* Ünvan + mini xəritə */}
+        <div className="overflow-hidden rounded-[18px] bg-surface">
+          <div className="flex items-center gap-3 px-3.5 py-3">
+            <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-soft text-primary-ink">
+              <span className="h-5 w-5">
+                <Icon name="pin" />
+              </span>
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-base font-semibold">{r.address ?? `${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}`}</div>
+              <div className="truncate text-[13px] text-muted">
+                {[r.locality, dist != null ? formatDistance(dist) : null].filter(Boolean).join(" · ")}
+              </div>
+            </div>
+          </div>
+          <div className="relative h-[150px] overflow-hidden">
+            <MapCanvas center={r} zoom={16} interactive={false} pin={pin} />
+            <Link
+              href={`/?${new URLSearchParams({ r: r.id, lat: String(r.lat), lng: String(r.lng) })}`}
+              className="absolute bottom-2.5 right-2.5 z-[600] flex h-9 items-center rounded-full bg-surface px-3 text-[13px] font-bold text-primary-ink shadow-[0_2px_6px_rgba(22,33,28,.18)]"
+            >
+              Xəritədə aç
+            </Link>
+          </div>
+        </div>
+
+        {r.note && (
+          <section>
+            <h2 className="mb-1.5 text-[13px] font-semibold tracking-[.06em] text-muted">QEYD</h2>
+            <p className="text-base leading-normal whitespace-pre-line text-pretty">{r.note}</p>
+          </section>
+        )}
+
+        {/* Səsvermə */}
+        <section className="flex flex-col gap-3 rounded-[18px] bg-surface p-4" aria-label="Təsdiqləmə">
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl leading-none font-bold text-success">{r.confirmCount}</span>
+            <span className="text-[15px] font-semibold">sürücü təsdiqləyib</span>
+            <span className="ml-auto text-[13px] text-muted">{r.outdatedCount} aktual deyil</span>
+          </div>
+          <div className="flex h-2 gap-0.5 overflow-hidden rounded" aria-hidden="true">
+            {total === 0 ? (
+              <div className="flex-1 bg-line" />
+            ) : (
+              <>
+                {r.confirmCount > 0 && <div className="bg-[#15803D]" style={{ flex: r.confirmCount }} />}
+                {r.outdatedCount > 0 && <div className="bg-danger" style={{ flex: r.outdatedCount }} />}
+              </>
+            )}
+          </div>
+          {r.isOwn ? (
+            <p className="rounded-xl bg-line-soft px-3 py-3 text-center text-sm text-muted">
+              Bu sizin bildirişinizdir — öz bildirişinizə səs verə bilməzsiniz.
+            </p>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => vote("confirm")}
+                disabled={!!r.myVote || busy != null}
+                className="flex h-14 items-center justify-center gap-2.5 rounded-2xl bg-primary text-base font-bold text-white disabled:opacity-55"
+              >
+                <span className="h-[22px] w-[22px]">
+                  <Icon name={r.myVote === "confirm" ? "check" : "thumb"} />
+                </span>
+                {r.myVote === "confirm" ? "Siz təsdiqlədiniz" : busy === "confirm" ? "Göndərilir…" : "Təsdiqləyirəm, mən də gördüm"}
+              </button>
+              <button
+                type="button"
+                onClick={() => vote("outdated")}
+                disabled={!!r.myVote || busy != null}
+                className="flex h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-line-strong text-[15px] font-semibold text-ink disabled:opacity-55"
+              >
+                <span className="h-5 w-5">
+                  <Icon name="ban" />
+                </span>
+                {r.myVote === "outdated" ? "Siz “aktual deyil” bildirdiniz" : "Artıq aktual deyil"}
+              </button>
+            </>
+          )}
+        </section>
+
+        {/* Paylaş */}
+        <section>
+          <h2 className="mb-2 text-[13px] font-semibold tracking-[.06em] text-muted">PAYLAŞ</h2>
+          <div className="grid grid-cols-3 gap-2">
+            <ShareLink href={`https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`} icon="chat" color="#1DA851" label="WhatsApp" />
+            <ShareLink
+              href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`}
+              icon="send"
+              color="#1B8FCB"
+              label="Telegram"
+            />
+            <button
+              type="button"
+              onClick={copyLink}
+              className="flex h-[52px] items-center justify-center gap-1.5 rounded-[14px] border border-line bg-surface text-sm font-semibold"
+            >
+              <span className="h-5 w-5 text-primary-ink">
+                <Icon name="link" />
+              </span>
+              Link
+            </button>
+          </div>
+        </section>
+
+        {!r.isOwn && (
+          <button
+            type="button"
+            onClick={() => setFlagOpen(true)}
+            disabled={r.myFlagged}
+            className="flex min-h-[52px] items-center justify-center gap-2 text-[15px] font-semibold text-danger-ink disabled:text-muted dark:text-danger-soft-ink"
+          >
+            <span className="h-[18px] w-[18px]">
+              <Icon name="flag" />
+            </span>
+            {r.myFlagged ? "Şikayətiniz qəbul edilib" : "Səhv məlumat / şikayət et"}
+          </button>
+        )}
+      </div>
+
+      <FlagSheet
+        open={flagOpen}
+        onClose={() => setFlagOpen(false)}
+        reportId={r.id}
+        onDone={() => {
+          setFlagOpen(false);
+          setR((x) => ({ ...x, myFlagged: true }));
+          toast("Şikayətiniz göndərildi. Təşəkkürlər!", { icon: "check" });
+        }}
+      />
+    </main>
+  );
+}
+
+function RoundButton({ icon, label, onClick }: { icon: IconName; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-[#16211C] shadow-[0_2px_8px_rgba(22,33,28,.18)]"
+    >
+      <span className="h-[22px] w-[22px]">
+        <Icon name={icon} />
+      </span>
+    </button>
+  );
+}
+
+function ShareLink({ href, icon, color, label }: { href: string; icon: IconName; color: string; label: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex h-[52px] items-center justify-center gap-1.5 rounded-[14px] border border-line bg-surface text-sm font-semibold"
+    >
+      <span className="h-5 w-5" style={{ color }}>
+        <Icon name={icon} />
+      </span>
+      {label}
+    </a>
+  );
+}
+
+function FlagSheet({ open, onClose, reportId, onDone }: { open: boolean; onClose: () => void; reportId: string; onDone: () => void }) {
+  const [reason, setReason] = useState<(typeof FLAG_REASONS)[number]["value"] | null>(null);
+  const [comment, setComment] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function submit() {
+    if (!reason) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api(`/api/reports/${reportId}/flag`, { method: "POST", json: { reason, comment: comment.trim() || undefined } });
+      onDone();
+    } catch (e) {
+      if (e instanceof ApiError && e.code === "already_flagged") onDone();
+      else setError(e instanceof ApiError ? e.message : "Xəta baş verdi");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Sheet open={open} onClose={onClose} title="Şikayət et">
+      <p className="mb-3 text-sm text-muted">Şikayətlər anonimdir. Bir neçə şikayətdən sonra bildiriş yoxlanılana qədər gizlədilir.</p>
+      <fieldset className="flex flex-col gap-2">
+        <legend className="sr-only">Səbəb</legend>
+        {FLAG_REASONS.map((o) => (
+          <label
+            key={o.value}
+            className={`flex min-h-[52px] cursor-pointer items-center gap-3 rounded-[14px] border-2 px-3.5 text-[15px] font-medium ${
+              reason === o.value ? "border-primary bg-primary-soft" : "border-line"
+            }`}
+          >
+            <input type="radio" name="reason" value={o.value} checked={reason === o.value} onChange={() => setReason(o.value)} className="h-5 w-5 accent-[#00A86B]" />
+            {o.label}
+          </label>
+        ))}
+      </fieldset>
+      <textarea
+        value={comment}
+        onChange={(e) => setComment(e.target.value.slice(0, 280))}
+        placeholder="Əlavə izah (istəyə bağlı)"
+        rows={3}
+        aria-label="Əlavə izah"
+        className="mt-3 block w-full resize-none rounded-2xl border-2 border-line bg-surface px-3.5 py-3 text-[15px] outline-none placeholder:text-subtle focus:border-primary"
+      />
+      {error && <p className="mt-2 text-sm font-semibold text-danger-ink">{error}</p>}
+      <button
+        type="button"
+        onClick={submit}
+        disabled={!reason || busy}
+        className="mt-3 flex h-14 w-full items-center justify-center rounded-2xl bg-danger text-base font-bold text-white disabled:opacity-50"
+      >
+        {busy ? "Göndərilir…" : "Şikayəti göndər"}
+      </button>
+    </Sheet>
+  );
+}

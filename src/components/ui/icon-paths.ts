@@ -1,0 +1,49 @@
+// Dizayndakı ikon dəsti (24×24, stroke 2). Path-lar design/YolXeber.dc.html-dəki P obyektindəndir.
+export const PATHS = {
+  search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4",
+  map: "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14",
+  feed: "M4 5h16v6H4zM4 15h16M4 19h10",
+  list: "M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01",
+  plus: "M12 5v14M5 12h14",
+  minus: "M5 12h14",
+  bell: "M6 16v-5a6 6 0 1 1 12 0v5l2 2H4l2-2zM10 21h4",
+  locate: "M12 2v3M12 19v3M2 12h3M19 12h3M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z",
+  chevL: "M15 5l-7 7 7 7",
+  chevR: "M9 5l7 7-7 7",
+  chevD: "M6 9l6 6 6-6",
+  x: "M6 6l12 12M18 6 6 18",
+  check: "M5 12.5l4.5 4.5L19 7",
+  camera: "M4 8h3l2-3h6l2 3h3v11H4zM12 10.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+  video: "M3 7h12v10H3zM15 10.5 21 7v10l-6-3.5",
+  image: "M4 4h16v16H4zM4 16l5-5 4 4 3-3 4 4M15.5 8.5h.01",
+  share: "M12 3v12M7 8l5-5 5 5M5 13v7h14v-7",
+  send: "M21 3 3 10.5l7 2.5 2.5 7L21 3zM10 13l5-5",
+  chat: "M4 20l1.3-4A8 8 0 1 1 8.5 19L4 20z",
+  link: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1",
+  flag: "M5 21V4M5 4h11l-2 4 2 4H5",
+  clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2",
+  pin: "M12 21s-7-6.5-7-12a7 7 0 1 1 14 0c0 5.5-7 12-7 12zM12 6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z",
+  thumb: "M7 11v9H4v-9h3zM7 11l4-8c1.5 0 2.5 1 2.5 2.5V9H19a2 2 0 0 1 2 2.3l-1.2 6.6A2.5 2.5 0 0 1 17.3 20H7",
+  ban: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM5.6 5.6l12.8 12.8",
+  shield: "M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6l8-3zM8.5 12l2.5 2.5 4.5-5",
+  wifiOff: "M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5-2.7M14 10.3A10 10 0 0 1 19 13M2 9.5a15 15 0 0 1 4.5-2.8M12 20h.01",
+  refresh: "M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6",
+  moon: "M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z",
+  sun: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
+  trash: "M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3",
+  settings: "M4 7h10M18 7h2M4 17h4M12 17h8M16 5v4M10 15v4",
+  logout: "M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11",
+  nisan: "M12 3.5 21.5 20h-19L12 3.5zM12 10v4.5M12 17.2h.01",
+  surat: "M4.5 17a8 8 0 1 1 15 0M12 15l4-5M12 15h.01",
+  kamera: "M3 7.5l12 3.5-1.6 4.5L3 12zM15 11l4 1.2M8 13.8 7 19H3",
+  zolaq: "M5 3v18M19 3v18M12 3v3M12 10v4M12 18v3",
+  donus: "M8 20v-9a4 4 0 0 1 8 0v5M13 13l3 3 3-3M3 3l18 18",
+  park: "M9 20V4h5a4.5 4.5 0 0 1 0 9H9",
+  diger: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
+} as const;
+
+export type IconName = keyof typeof PATHS;
+
+export function iconPath(name: IconName) {
+  return PATHS[name];
+}

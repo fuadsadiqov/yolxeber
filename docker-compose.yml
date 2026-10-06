@@ -1,0 +1,82 @@
+# Lokal inkişaf:   docker compose up -d db          (sonra: pnpm dev)
+# Production:      docker compose --profile prod up -d --build
+name: yolxeber
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-yolxeber}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yolxeber}
+      POSTGRES_DB: ${POSTGRES_DB:-yolxeber}
+    ports:
+      - "127.0.0.1:5432:5432" # yalnız lokal maşından əlçatandır
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    profiles: ["prod"]
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-yolxeber}:${POSTGRES_PASSWORD:-yolxeber}@db:5432/${POSTGRES_DB:-yolxeber}
+      MEDIA_DIR: /data/media
+    volumes:
+      - media:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Test məlumatları (Bakıdan 25 bildiriş + şəkillər) — media volume-a yazır.
+  #   docker compose --profile prod up -d --build      (əvvəlcə — migration-lar app başlananda işləyir)
+  #   docker compose --profile tools run --rm seed --reset
+  seed:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: build
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-yolxeber}:${POSTGRES_PASSWORD:-yolxeber}@db:5432/${POSTGRES_DB:-yolxeber}
+      MEDIA_DIR: /data/media
+    volumes:
+      - media:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+    # root kimi işləyir; yaradılan qovluqlara app istifadəçisinin də yaza bilməsi üçün icazələr açılır
+    entrypoint: ["sh", "-c", "node --import tsx scripts/seed.ts \"$$@\" && chmod -R a+rwX /data/media", "seed"]
+
+  # HTTPS (Let's Encrypt avtomatik). Kamera, GPS və push yalnız HTTPS-də işləyir.
+  caddy:
+    profiles: ["prod"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - media:/srv/media:ro
+      - caddy_data:/data
+    depends_on:
+      - app
+
+volumes:
+  pgdata:
+  media:
+  caddy_data:

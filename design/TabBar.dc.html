@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="height:84px;display:flex;align-items:flex-start;padding:6px 24px 0;background:{{ bg }};border-top:1px solid {{ line }};font-family:'Poppins',system-ui,sans-serif">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:52px;justify-content:center;color:{{ c.map }}"><span style="width:56px;height:30px;border-radius:15px;background:{{ pb.map }};display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;display:flex">{{ ic.map }}</span></span><span style="font-size:11px;font-weight:{{ w.map }}">Xəritə</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:-20px"><div style="width:56px;height:56px;border-radius:18px;background:#F5B800;color:#16211C;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px {{ bg }}, 0 8px 18px rgba(245,184,0,.45)"><span style="width:28px;height:28px;display:flex">{{ ic.plus }}</span></div><span style="font-size:11px;font-weight:700;color:{{ c.add }}">Bildir</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:52px;justify-content:center;color:{{ c.feed }}"><span style="width:56px;height:30px;border-radius:15px;background:{{ pb.feed }};display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;display:flex">{{ ic.feed }}</span></span><span style="font-size:11px;font-weight:{{ w.feed }}">Lent</span></div>
+</div>
+</x-dc>
+<!-- logic: active ∈ map|feed|add; dark bool. on=dark?#FFFFFF:#007A4E off=dark?#8592A8:#5B6678; pill bg active=dark?#24314A:#E6F6EE; bg=dark?#121B2B:#FFFFFF; line=dark?#24314A:#E2E7EE
+icons: map 'M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14' feed 'M4 5h16v6H4zM4 15h16M4 19h10' plus 'M12 5v14M5 12h14' -->
+</body>
+</html>

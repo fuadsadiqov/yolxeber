@@ -18,6 +18,10 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "design/**",
+      "data/**",
+      "public/sw.js",
+      "public/swe-worker*.js",
     ],
   },
 ];

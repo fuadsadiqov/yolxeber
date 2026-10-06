@@ -1,26 +1,240 @@
 @import "tailwindcss";
 
+/* Tünd tema <html data-theme="dark"> ilə idarə olunur (sistem ayarı + əl ilə keçid, bax: ThemeScript). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Dizayn tokenləri — design/YolXeber.dc.html-dən götürülüb */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --surface-muted: #e4e8ee;      /* seqment kontrolun fonu, skeleton */
+  --skeleton: #e9edf2;
+  --line: #e2e7ee;
+  --line-soft: #eef1f5;          /* siyahı sətirləri arası */
+  --line-strong: #cbd2dc;        /* ikinci dərəcəli düymə çərçivəsi, tutacaq */
+  --ink: #16211c;
+  --muted: #5b6678;
+  --subtle: #8a94a6;
+
+  --primary: #00a86b;            /* əsas düymələr */
+  --primary-ink: #007a4e;        /* link, aktiv tab, ikon */
+  --primary-soft: #e6f6ee;
+  --on-tab-active: #007a4e;
+  --tab-pill: #e6f6ee;
+
+  --accent: #f5b800;             /* "Bildir" */
+  --accent-ink: #16211c;
+  --accent-badge-bg: #fff4d6;
+  --accent-badge-fg: #8a5f00;
+
+  --success: #15803d;
+  --success-soft: #e7f5ec;
+  --danger: #d7262e;
+  --danger-ink: #c01f27;
+  --danger-soft: #fdecec;
+  --danger-soft-ink: #a11a21;
+
+  --map-bg: #edeff2;
+  --me: #1d5bd8;                 /* "mənim yerim" nöqtəsi */
+  --me-halo: rgba(29, 91, 216, 0.2);
+  --toast: #16211c;
+
+  --shadow-sheet: 0 -6px 24px rgba(22, 33, 28, 0.14);
+  --shadow-float: 0 2px 10px rgba(22, 33, 28, 0.18);
+  --shadow-fab: 0 8px 20px rgba(214, 150, 0, 0.45);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0a111e;
+  --surface: #121b2b;
+  --surface-muted: #1b2537;
+  --skeleton: #1b2537;
+  --line: #24314a;
+  --line-soft: #1e2a40;
+  --line-strong: #34425c;
+  --ink: #e7ecf4;
+  --muted: #98a4b8;
+  --subtle: #6e7b93;
+
+  --primary: #00a86b;
+  --primary-ink: #3dd39a;
+  --primary-soft: #16302a;
+  --on-tab-active: #ffffff;
+  --tab-pill: #24314a;
+
+  --accent-badge-bg: #f5b800;
+  --accent-badge-fg: #1f1500;
+
+  --success: #34c46a;
+  --success-soft: #133222;
+  --danger-soft: #3a1518;
+  --danger-soft-ink: #ff9a9f;
+
+  --map-bg: #1b2433;
+  --me: #5b8def;
+  --me-halo: rgba(91, 141, 239, 0.28);
+  --toast: #24314a;
+
+  --shadow-sheet: none;
+  --shadow-float: none;
+  --shadow-fab: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-skeleton: var(--skeleton);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-badge-bg: var(--accent-badge-bg);
+  --color-accent-badge-fg: var(--accent-badge-fg);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-ink: var(--danger-ink);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-ink: var(--danger-soft-ink);
+  --color-map-bg: var(--map-bg);
+  --color-me: var(--me);
+  --color-toast: var(--toast);
+
+  --shadow-sheet: var(--shadow-sheet);
+  --shadow-float: var(--shadow-float);
+  --shadow-fab: var(--shadow-fab);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Alt tab bar + iPhone "home indicator" sahəsi */
+.pb-tabbar {
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+}
+
+/* ─── Xəritə (Leaflet) ─────────────────────────────────────────── */
+/* İkiqat sinif — leaflet.css-dən sonra yüklənsə də üstün olsun */
+.leaflet-container.leaflet-container {
+  background: var(--map-bg);
+  font-family: inherit;
+}
+/* Tünd tema: işıqlı OSM plitələrini tündləşdirir (ayrıca tünd plitə URL-i verilmədikdə) */
+.yx-dark-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.85) saturate(0.5);
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+  background: color-mix(in srgb, var(--surface) 75%, transparent) !important;
+  color: var(--muted);
+}
+.leaflet-control-attribution a {
+  color: var(--muted);
+}
+
+/* Kateqoriya pini — dizayn: 42px dairə, 3px ağ çərçivə, kölgə */
+.yx-pin {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--c);
+  color: var(--fg);
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(22, 33, 28, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+.yx-pin svg {
+  width: 20px;
+  height: 20px;
+}
+[data-theme="dark"] .yx-pin {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+/* Seçilmiş pin — böyük, rəngli halqa */
+.yx-pin--sel {
+  width: 52px;
+  height: 52px;
+  border-width: 4px;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--c) 30%, transparent),
+    0 6px 14px rgba(22, 33, 28, 0.4);
+}
+.yx-pin--sel svg {
+  width: 24px;
+  height: 24px;
+}
+.yx-pin--sm {
+  width: 38px;
+  height: 38px;
+}
+.yx-pin--sm svg {
+  width: 18px;
+  height: 18px;
+}
+/* "Artıq aktual deyil" — solğun */
+.yx-pin--old {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+.yx-cluster {
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--surface);
+  border: 3px solid var(--surface);
+  box-shadow: 0 4px 10px rgba(22, 33, 28, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* İstifadəçinin mövqeyi — mavi nöqtə və halo */
+.yx-me {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--me-halo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.yx-me > div {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--me);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Üfüqi media karuseli üçün scrollbar gizlədilir */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
