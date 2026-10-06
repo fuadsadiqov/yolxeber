@@ -1,4 +1,8 @@
+# pnpm 10+ paketlərin install skriptlərini yalnız icazə verilənlər üçün işlədir.
+# esbuild və unrs-resolver-in postinstall skriptləri isteğe bağlıdır (platforma binarını onsuz da tapırlar)
+# və bəzi Linux serverlərdə (root, CI) uğursuz olub bütün install-u dayandırırdı — söndürülüb.
+# sharp — prebuilt binar istifadə edir, skripti yalnız yoxlama aparır.
 allowBuilds:
-  esbuild: true
-  unrs-resolver: true
+  esbuild: false
+  unrs-resolver: false
   sharp: true
