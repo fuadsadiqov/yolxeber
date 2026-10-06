@@ -29,6 +29,9 @@ COPY --from=build --chown=app:app /app/.next/static ./.next/static
 COPY --from=build --chown=app:app /app/public ./public
 COPY --from=build --chown=app:app /app/drizzle ./drizzle
 COPY --from=build --chown=app:app /app/scripts/migrate.mjs ./scripts/migrate.mjs
+# Standalone paketi (pnpm) postgres-i yalnız server kodunun .pnpm yolları ilə saxlayır, ayrıca skript onu tapmır.
+# migrate.mjs üçün eyni versiyanı scripts/node_modules-a qoyuruq (asılılığı yoxdur, kiçikdir).
+RUN cd scripts && echo '{"private":true}' > package.json && npm install --no-save --no-package-lock --omit=dev --no-audit --no-fund postgres@3.4.9 && chown -R app:app node_modules
 
 USER app
 EXPOSE 3000
