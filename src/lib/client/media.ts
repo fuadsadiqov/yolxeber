@@ -18,6 +18,12 @@ export type DraftMedia = {
 
 export class MediaError extends Error {}
 
+/** crypto.randomUUID yalnız HTTPS/localhost-da mövcuddur — http://IP ilə açılanda ehtiyat variant */
+const uid = () =>
+  typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+
 function toBlob(canvas: HTMLCanvasElement, type: string, quality: number) {
   return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
 }
@@ -94,7 +100,7 @@ const VIDEO_TYPES = ["video/mp4", "video/quicktime", "video/webm"];
 
 /** Seçilmiş faylı yoxlayıb hazırlayır: şəkil → sıxışdırılır, video → ölçü/müddət limiti yoxlanılır. */
 export async function prepareMedia(file: File): Promise<DraftMedia> {
-  const id = crypto.randomUUID();
+  const id = uid();
   const capturedAt = new Date(file.lastModified || Date.now());
   if (file.type.startsWith("video/")) {
     if (!VIDEO_TYPES.includes(file.type)) throw new MediaError("Bu video formatı dəstəklənmir (MP4, MOV, WebM).");

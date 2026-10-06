@@ -1,16 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
 import { ThemeScript } from "@/components/layout/theme";
 import { ToastProvider } from "@/components/ui/Toast";
 import { GeoProvider } from "@/lib/client/geo";
+// Poppins paketin içindədir (@fontsource) — build zamanı Google Fonts-a çıxış lazım deyil,
+// latin-ext alt dəsti Azərbaycan hərflərini (ə, ğ, ı, ö, ş, ü, ç) əhatə edir.
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/poppins/700.css";
 import "./globals.css";
-
-const poppins = Poppins({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: { default: "YolXəbər", template: "%s · YolXəbər" },
@@ -37,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <ThemeScript />
       </head>
-      <body className={`${poppins.variable} font-sans`}>
+      <body className="font-sans">
         <GeoProvider>
           <ToastProvider>{children}</ToastProvider>
         </GeoProvider>

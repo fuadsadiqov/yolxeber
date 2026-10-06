@@ -4,6 +4,11 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-06 — Düzəlişlər: şrift və http-də fayl əlavə etmə
+
+- **Poppins paketin içindədir** (`@fontsource/poppins`, 400/500/600/700, latin + latin-ext). Əvvəl `next/font/google` build zamanı Google Fonts-dan yükləyirdi. Serverdə Docker build zamanı bu alınmayanda şrift səssizcə sistem şriftinə düşürdü.
+- **"Fayl əlavə olunmadı" xətası:** `crypto.randomUUID()` brauzerdə yalnız HTTPS/localhost-da mövcuddur. Sayt `http://IP:port` ilə açılanda media hazırlanarkən xəta atırdı. Ehtiyat id generatoru əlavə olundu. Qeyd: kamera ilə birbaşa çəkmək və GPS yenə də yalnız HTTPS-də işləyir.
+
 ## 2026-10-06 — Server: portlar və deploy düzəlişləri
 
 - Serverdə başqa layihələr **80, 443, 3000, 9090** portlarını tutur. Buna görə:

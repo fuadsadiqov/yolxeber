@@ -85,7 +85,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-poppins), system-ui, sans-serif;
+  --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
