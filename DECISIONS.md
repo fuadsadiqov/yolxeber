@@ -4,6 +4,16 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-06 — Server: portlar və deploy düzəlişləri
+
+- Serverdə başqa layihələr **80, 443, 3000, 9090** portlarını tutur. Buna görə:
+  - `app` konteyneri sərbəst porta çıxır: `${APP_BIND:-0.0.0.0}:${APP_PORT:-3100}`. `/media/*` fayllarını app-in özü verir (Range dəstəyi ilə).
+  - Caddy ayrıca `caddy` profilinə keçirildi. Yalnız 80/443 boş olan serverdə istifadə olunur, portları `HTTP_PORT`/`HTTPS_PORT` ilə dəyişmək olar.
+  - HTTPS mövcud reverse proxy ilə təmin olunur, nümunə nginx konfiqurasiyası README-dədir.
+  - DB host portu `DB_PORT` ilə dəyişdirilə bilər (yalnız `127.0.0.1`).
+- **Dockerfile `node:22-alpine`-a keçirildi.** pnpm 11 Node ≥ 22.13 tələb edir. pnpm corepack əvəzinə `npm i -g pnpm@11.11.0` ilə quraşdırılır.
+- **`esbuild` və `unrs-resolver` postinstall skriptləri söndürüldü** (`pnpm-workspace.yaml`). Linux serverdə install-u dayandırırdılar, isteğe bağlıdırlar.
+
 ## 2026-10-06 — Mərhələ 6: admin panel, PWA, son yoxlamalar
 
 - **Admin panel** (`/admin`) 4 bölmədən ibarətdir: Gizlədilənlər, Şikayət olunanlar, Son bildirişlər, Bloklanmış cihazlar.

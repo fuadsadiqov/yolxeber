@@ -53,19 +53,34 @@ pnpm dev                    # http://localhost:3000
 
 ```bash
 cp .env.example .env
-#   DOMAIN=yolxeber.example.az           ← DNS bu serverə yönəlməlidir (80/443 açıq)
+#   APP_PORT=3100                         ← app-in çıxdığı port (sərbəst olmalıdır)
 #   DEVICE_SECRET, ADMIN_JWT_SECRET       ← təsadüfi uzun sətirlər
 #   ADMIN_PASSWORD                        ← mütləq dəyişin
 #   POSTGRES_PASSWORD                     ← dəyişin
 #   NOMINATIM_USER_AGENT                  ← real əlaqə e-poçtu ilə
-#   VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY  ← pnpm vapid (və ya npx web-push generate-vapid-keys)
+#   VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY  ← npx web-push generate-vapid-keys
 
-docker compose --profile prod up -d --build
-docker compose --profile tools run --rm seed --reset    # istəyə bağlı: test məlumatları
+docker compose --profile prod up -d --build              # db + app → http://<server>:3100
+docker compose --profile tools run --rm seed --reset     # istəyə bağlı: test məlumatları
 ```
 
-- `db` (PostGIS), `app` (Next.js, hər başlanğıcda migration-ları tətbiq edir) və `caddy` (avtomatik HTTPS, `/media/*`-i birbaşa volume-dan verir) konteynerləri işə düşür.
-- Volume-lar: `pgdata` (baza), `media` (yüklənən fayllar), `caddy_data` (sertifikatlar). **Backup:** `pg_dump` və `media` volume-u.
+- `db` (PostGIS) və `app` (Next.js) konteynerləri işə düşür. App hər başlanğıcda migration-ları tətbiq edir və `/media/*` fayllarını özü verir.
+- **HTTPS lazımdır:** telefonda kamera, GPS və push yalnız HTTPS-də işləyir.
+  - **Serverdə artıq 80/443-ü tutan reverse proxy varsa** (nginx, Traefik, Caddy, Nginx Proxy Manager və s.), domeni `http://<server>:3100`-ə yönləndirin. `APP_BIND=127.0.0.1` yazsanız, app yalnız proxy vasitəsilə əlçatan olur (proxy host şəbəkəsindədirsə). Nümunə nginx bloku:
+    ```nginx
+    server {
+      server_name yolxeber.example.az;
+      client_max_body_size 60m;              # video 50 MB + digər fayllar
+      location / {
+        proxy_pass http://127.0.0.1:3100;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+      }
+    }
+    ```
+  - **80/443 boşdursa**, öz Caddy-mizi istifadə edin. HTTPS sertifikatı avtomatik alınır: `.env`-də `DOMAIN=...` yazın, sonra `docker compose --profile prod --profile caddy up -d --build`.
+- Volume-lar: `pgdata` (baza), `media` (yüklənən fayllar), `caddy_data` (yalnız Caddy profili). **Backup:** `pg_dump` və `media` volume-u.
 - Sağlamlıq yoxlaması: `GET /api/health`.
 - `NEXT_PUBLIC_TILE_*` dəyişənləri build zamanı koda yazılır. Dəyişəndən sonra `--build` ilə yenidən qurun.
 

@@ -1,5 +1,8 @@
 # Lokal inkişaf:   docker compose up -d db          (sonra: pnpm dev)
 # Production:      docker compose --profile prod up -d --build
+#                  → app: http://<server>:${APP_PORT:-3100}. HTTPS üçün serverdəki mövcud reverse proxy-dən
+#                    domeni bu porta yönləndirin (README → Production).
+# Öz HTTPS-i ilə (80/443 boşdursa): docker compose --profile prod --profile caddy up -d --build
 name: yolxeber
 
 services:
@@ -11,7 +14,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yolxeber}
       POSTGRES_DB: ${POSTGRES_DB:-yolxeber}
     ports:
-      - "127.0.0.1:5432:5432" # yalnız lokal maşından əlçatandır
+      - "127.0.0.1:${DB_PORT:-5432}:5432" # yalnız lokal maşından əlçatandır
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -28,6 +31,10 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-yolxeber}:${POSTGRES_PASSWORD:-yolxeber}@db:5432/${POSTGRES_DB:-yolxeber}
       MEDIA_DIR: /data/media
+    ports:
+      # Serverdə başqa layihələr 80/443/3000 portlarını tutduğu üçün sərbəst port; yalnız proxy arxasında
+      # olacaqsa APP_BIND=127.0.0.1 yazın.
+      - "${APP_BIND:-0.0.0.0}:${APP_PORT:-3100}:3000"
     volumes:
       - media:/data/media
     depends_on:
@@ -59,16 +66,16 @@ services:
     # root kimi işləyir; yaradılan qovluqlara app istifadəçisinin də yaza bilməsi üçün icazələr açılır
     entrypoint: ["sh", "-c", "node --import tsx scripts/seed.ts \"$$@\" && chmod -R a+rwX /data/media", "seed"]
 
-  # HTTPS (Let's Encrypt avtomatik). Kamera, GPS və push yalnız HTTPS-də işləyir.
+  # İsteğe bağlı: öz HTTPS-i (Let's Encrypt). Yalnız serverdə 80/443 boşdursa — burada onları başqa proxy tutub.
   caddy:
-    profiles: ["prod"]
+    profiles: ["caddy"]
     image: caddy:2-alpine
     restart: unless-stopped
     environment:
       DOMAIN: ${DOMAIN:-localhost}
     ports:
-      - "80:80"
-      - "443:443"
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - media:/srv/media:ro
