@@ -1,0 +1,18 @@
+# Serverdə artıq işləyən reverse proxy konteyneri (məs. başqa layihənin nginx-i) ilə inteqrasiya.
+# App həmin proxy-nin Docker şəbəkəsinə "yolxeber" adı ilə qoşulur — nginx-də: proxy_pass http://yolxeber:3000
+#
+#   docker compose -f docker-compose.yml -f docker-compose.proxy.yml --profile prod up -d --build
+#
+# PROXY_NETWORK — proxy konteynerinin şəbəkəsi:
+#   docker inspect <nginx-konteyneri> --format '{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+services:
+  app:
+    networks:
+      default:
+      proxy:
+        aliases: [yolxeber]
+
+networks:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-app_default}
