@@ -177,69 +177,81 @@ export function MapScreen() {
           </div>
         </div>
 
-        {/* Mobil: alt panel + üzən düymələr */}
-        <div className="absolute inset-x-0 z-[600] md:hidden" style={{ bottom: "calc(84px + env(safe-area-inset-bottom))" }}>
+        {/* Mobil: alt panel + üzən düymələr. Konteyner toxunuşları tutmur — boş sahədə xəritə sürüşdürülə bilsin. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 z-[600] md:hidden"
+          style={{ bottom: "calc(84px + env(safe-area-inset-bottom))" }}
+        >
           {!expanded && (
-            <div className="pointer-events-none flex flex-col items-end gap-3 px-4 pb-4">
+            <div className="flex flex-col items-end gap-3 px-4 pb-4">
               <MapButton icon="locate" label="Mənim yerim" onClick={onLocate} big />
-              {!empty && (
-                <Link
-                  href="/bildir"
-                  className="pointer-events-auto flex h-[58px] items-center gap-2 rounded-full bg-accent pl-[18px] pr-6 text-[17px] font-bold text-accent-ink shadow-fab"
-                >
-                  <span className="h-6 w-6"><Icon name="plus" /></span>
-                  Bildir
-                </Link>
-              )}
+              <Link
+                href="/bildir"
+                className="pointer-events-auto flex h-[58px] items-center gap-2 rounded-full bg-accent pl-[18px] pr-6 text-[17px] font-bold text-accent-ink shadow-fab"
+              >
+                <span className="h-6 w-6"><Icon name="plus" /></span>
+                Bildir
+              </Link>
             </div>
           )}
 
+          {/* Default bağlıdır (yalnız başlıq görünür) — xəritə üçün maksimum yer; başlığa basanda açılır */}
           <section
             aria-label="Yaxınlıqdakı son dəyişikliklər"
-            className="flex flex-col rounded-t-3xl bg-surface px-4 pt-2.5 shadow-sheet transition-[height] duration-200 dark:border-t dark:border-line"
-            style={{ height: empty ? "auto" : expanded ? "min(72dvh, 640px)" : 262 }}
+            className="pointer-events-auto flex flex-col rounded-t-3xl bg-surface px-4 shadow-sheet transition-[height] duration-200 dark:border-t dark:border-line"
+            style={{ height: expanded && !empty ? "min(72dvh, 640px)" : "auto" }}
           >
             <button
               type="button"
               onClick={() => setExpanded((x) => !x)}
               aria-expanded={expanded}
               aria-label={expanded ? "Paneli kiçilt" : "Paneli genişləndir"}
-              className="-mt-2.5 flex h-[29px] w-full flex-none items-center justify-center"
+              className="flex w-full flex-none flex-col pb-3 text-left"
             >
-              <span className="h-[5px] w-10 rounded-full bg-line-strong" />
-            </button>
-
-            {empty ? (
-              <div className="flex flex-col items-center px-2 pb-6 pt-2.5 text-center">
-                <span className="mb-4 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-primary-soft text-primary-ink">
-                  <span className="h-[34px] w-[34px]"><Icon name="pin" /></span>
+              <span className="flex h-[19px] w-full items-center justify-center">
+                <span className="h-[5px] w-10 rounded-full bg-line-strong" />
+              </span>
+              <span className="flex w-full items-start justify-between gap-3">
+                <span>
+                  <span className="block text-lg font-bold">Yaxınlıqdakı son dəyişikliklər</span>
+                  <span className="mt-0.5 block text-[13px] text-muted">
+                    {subtitle}
+                    {nearby ? ` · ${nearby.items.length} bildiriş` : ""}
+                  </span>
                 </span>
-                <div className="mb-2 text-xl font-bold">Bu ərazidə hələ bildiriş yoxdur</div>
-                <p className="mb-5 text-[15px] leading-normal text-pretty text-muted">
-                  Yeni nişan və ya kamera görsəniz, ilk bildirişi siz paylaşın.
-                </p>
-                <Link
-                  href="/bildir"
-                  className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent text-[17px] font-bold text-accent-ink"
-                >
-                  <span className="h-[22px] w-[22px]"><Icon name="plus" /></span>
-                  Bildir
-                </Link>
-              </div>
-            ) : (
-              <>
-                <div className="mb-1.5 flex flex-none items-start justify-between">
-                  <div>
-                    <h2 className="text-lg font-bold">Yaxınlıqdakı son dəyişikliklər</h2>
-                    <p className="mt-0.5 text-[13px] text-muted">{subtitle}</p>
-                  </div>
+                <span className="flex flex-none items-center gap-2">
                   {!!nearby?.newCount && (
                     <span className="rounded-xl bg-accent-badge-bg px-2.5 py-1 text-xs font-bold text-accent-badge-fg">
                       {nearby.newCount} yeni
                     </span>
                   )}
+                  <span className={`h-5 w-5 text-muted transition-transform ${expanded ? "" : "rotate-180"}`}>
+                    <Icon name="chevD" />
+                  </span>
+                </span>
+              </span>
+            </button>
+
+            {expanded &&
+              (empty ? (
+                <div className="flex flex-col items-center px-2 pb-6 pt-2.5 text-center">
+                  <span className="mb-4 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-primary-soft text-primary-ink">
+                    <span className="h-[34px] w-[34px]"><Icon name="pin" /></span>
+                  </span>
+                  <div className="mb-2 text-xl font-bold">Bu ərazidə hələ bildiriş yoxdur</div>
+                  <p className="mb-5 text-[15px] leading-normal text-pretty text-muted">
+                    Yeni nişan və ya kamera görsəniz, ilk bildirişi siz paylaşın.
+                  </p>
+                  <Link
+                    href="/bildir"
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent text-[17px] font-bold text-accent-ink"
+                  >
+                    <span className="h-[22px] w-[22px]"><Icon name="plus" /></span>
+                    Bildir
+                  </Link>
                 </div>
-                <div className={`min-h-0 flex-1 ${expanded ? "overflow-y-auto" : "overflow-hidden"}`}>
+              ) : (
+                <div className="min-h-0 flex-1 overflow-y-auto">
                   {!nearby && !nearbyFailed &&
                     [1, 2].map((i) => (
                       <div key={i} className="flex min-h-[72px] items-center gap-3 border-t border-line-soft">
@@ -257,8 +269,7 @@ export function MapScreen() {
                   )}
                   {nearby?.items.map((r) => <NearbyRow key={r.id} r={r} onClick={openOnMap} />)}
                 </div>
-              </>
-            )}
+              ))}
           </section>
         </div>
       </div>
