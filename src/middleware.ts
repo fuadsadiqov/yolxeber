@@ -36,7 +36,8 @@ export async function middleware(req: NextRequest) {
     res.cookies.set(DEVICE_COOKIE, await signDeviceId(deviceId), {
       httpOnly: true,
       sameSite: "lax",
-      secure: req.nextUrl.protocol === "https:",
+      // Nginx/Caddy arxasında app sorğunu http kimi görür — proxy-nin başlığına baxırıq
+      secure: req.nextUrl.protocol === "https:" || req.headers.get("x-forwarded-proto") === "https",
       path: "/",
       maxAge: DEVICE_MAX_AGE,
     });

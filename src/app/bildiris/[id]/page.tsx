@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { getDeviceId } from "@/lib/device";
+import { env } from "@/lib/env";
 import { CATEGORIES } from "@/lib/categories";
 import { reportDetail } from "@/lib/reports";
 import { ReportDetailView } from "./ReportDetailView";
@@ -17,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cover = r.media.find((m) => m.kind === "image");
   const description = [CATEGORIES[r.category].name, r.address, r.note].filter(Boolean).join(" · ");
   return {
+    metadataBase: env.SITE_URL ? new URL(env.SITE_URL) : undefined,
     title: r.title,
     description,
     openGraph: { title: r.title, description, images: cover ? [{ url: cover.url }] : undefined, type: "article" },

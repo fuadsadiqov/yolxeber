@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   res.cookies.set(ADMIN_COOKIE, await createAdminToken(username), {
     httpOnly: true,
     sameSite: "strict",
-    secure: new URL(req.url).protocol === "https:",
+    secure: new URL(req.url).protocol === "https:" || req.headers.get("x-forwarded-proto") === "https",
     path: "/",
     maxAge: ADMIN_SESSION_HOURS * 3600,
   });

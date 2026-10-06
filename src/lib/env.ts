@@ -10,6 +10,9 @@ const schema = z.object({
   ADMIN_PASSWORD: z.string().min(1).default("admin"),
   ADMIN_JWT_SECRET: z.string().min(32, "ADMIN_JWT_SECRET ən azı 32 simvol olmalıdır"),
 
+  // Saytın ictimai ünvanı — paylaşma önizləmələrində (OG) tam URL üçün. Məs.: https://yolxeber.tekerizm.com
+  SITE_URL: z.string().url().optional(),
+
   // Media faylları diskdə (Docker volume) saxlanılır və /media/... ünvanından verilir.
   MEDIA_DIR: z.string().default("./data/media"),
 
