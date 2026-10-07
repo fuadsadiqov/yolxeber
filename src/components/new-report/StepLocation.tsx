@@ -151,7 +151,11 @@ export function StepLocation({
   }
 
   return (
-    <div className="absolute inset-x-0 bottom-0 overflow-hidden" style={{ top: "calc(env(safe-area-inset-top) + 136px)" }}>
+    // Xəritə panelin üstündə qalan sahəni tutur (panel böyüdükcə kiçilir) — pin və "Mənim yerim" həmişə görünür.
+    // Xəritə panelin yuvarlaq künclərinin altına 24px uzanır; pin xəritə konteynerinin mərkəzində olduğu üçün
+    // seçilən koordinat dəqiq qalır.
+    <div className="absolute inset-x-0 bottom-0 flex flex-col overflow-hidden" style={{ top: "calc(env(safe-area-inset-top) + 136px)" }}>
+      <div className="relative -mb-6 min-h-[200px] flex-1 overflow-hidden">
       <MapCanvas ref={mapRef} center={initial} zoom={place || position ? 17 : 13} onViewChange={onView} />
 
       <div className="pointer-events-none absolute left-1/2 top-3.5 z-[600] flex h-9 -translate-x-1/2 items-center whitespace-nowrap rounded-full bg-[#16211C] px-3.5 text-[13px] font-semibold text-white">
@@ -172,17 +176,17 @@ export function StepLocation({
       <button
         type="button"
         onClick={toMyLocation}
-        className="absolute right-4 z-[600] flex h-[52px] items-center gap-2 rounded-full bg-surface pl-3.5 pr-[18px] text-[15px] font-bold text-primary-ink shadow-float dark:border dark:border-line"
-        style={{ bottom: 250 }}
+        className="absolute bottom-9 right-4 z-[600] flex h-[52px] items-center gap-2 rounded-full bg-surface pl-3.5 pr-[18px] text-[15px] font-bold text-primary-ink shadow-float dark:border dark:border-line"
       >
         <span className="h-[22px] w-[22px]">
           <Icon name="locate" />
         </span>
         {status === "locating" ? "Axtarılır…" : "Mənim yerim"}
       </button>
+      </div>
 
       <div
-        className="absolute inset-x-0 bottom-0 z-[650] rounded-t-3xl bg-surface px-4 pt-5 shadow-sheet dark:border-t dark:border-line"
+        className="relative z-[650] flex-none rounded-t-3xl bg-surface px-4 pt-5 shadow-sheet dark:border-t dark:border-line"
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 104px)" }}
       >
         <div className="mx-auto max-w-[480px]">
@@ -242,7 +246,7 @@ export function StepLocation({
               </button>
               </div>
               {hits && (
-                <ul className="mt-2 overflow-hidden rounded-xl border border-line" role="listbox" aria-label="Tapılan ünvanlar">
+                <ul className="mt-2 max-h-[184px] overflow-y-auto rounded-xl border border-line" role="listbox" aria-label="Tapılan ünvanlar">
                   {hits.map((h, i) => (
                     <li key={`${h.lat},${h.lng},${i}`} className={i ? "border-t border-line-soft" : ""}>
                       <button

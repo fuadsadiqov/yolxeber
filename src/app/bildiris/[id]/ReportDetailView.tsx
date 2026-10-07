@@ -200,6 +200,8 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
           </div>
         </div>
 
+        <NavigateSection lat={r.lat} lng={r.lng} title={r.title} />
+
         {r.note && (
           <section>
             <h2 className="mb-1.5 text-[13px] font-semibold tracking-[.06em] text-muted">QEYD</h2>
@@ -308,6 +310,78 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         }}
       />
     </main>
+  );
+}
+
+/**
+ * Bildirişin koordinatını xarici xəritə/naviqasiya tətbiqlərində açır.
+ * Universal linklər istifadə olunur: tətbiq quraşdırılıbsa tətbiq, yoxdursa veb versiya açılır.
+ */
+function NavigateSection({ lat, lng, title }: { lat: number; lng: number; title: string }) {
+  const toast = useToast();
+  const [isAndroid, setIsAndroid] = useState(false);
+  useEffect(() => setIsAndroid(/Android/i.test(navigator.userAgent)), []);
+  const ll = `${lat.toFixed(6)},${lng.toFixed(6)}`;
+  const q = encodeURIComponent(title);
+
+  const apps: { label: string; href: string; icon: IconName; color: string }[] = [
+    { label: "Google Maps", href: `https://www.google.com/maps/search/?api=1&query=${ll}`, icon: "pin", color: "#4285F4" },
+    { label: "Waze", href: `https://waze.com/ul?ll=${ll}&navigate=yes`, icon: "navigation", color: "#1FB6E8" },
+    { label: "Apple Xəritələr", href: `https://maps.apple.com/?ll=${ll}&q=${q}`, icon: "map", color: "#5B6678" },
+    { label: "Yandex", href: `https://yandex.com/maps/?pt=${lng.toFixed(6)},${lat.toFixed(6)}&z=17&l=map`, icon: "route", color: "#FC3F1D" },
+  ];
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(ll);
+      toast("Koordinat kopyalandı", { icon: "check" });
+    } catch {
+      toast(ll);
+    }
+  }
+
+  return (
+    <section aria-label="Xəritə tətbiqində aç">
+      <h2 className="mb-2 text-[13px] font-semibold tracking-[.06em] text-muted">XƏRİTƏ TƏTBİQİNDƏ AÇ</h2>
+      <div className="grid grid-cols-2 gap-2">
+        {apps.map((a) => (
+          <a
+            key={a.label}
+            href={a.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-[52px] items-center justify-center gap-2 rounded-[14px] border border-line bg-surface px-2 text-sm font-semibold"
+          >
+            <span className="h-5 w-5 flex-none" style={{ color: a.color }}>
+              <Icon name={a.icon} />
+            </span>
+            <span className="truncate">{a.label}</span>
+          </a>
+        ))}
+        {isAndroid && (
+          // Android: sistem seçim pəncərəsi — quraşdırılmış istənilən xəritə tətbiqi
+          <a
+            href={`geo:${ll}?q=${ll}(${q})`}
+            className="col-span-2 flex h-[52px] items-center justify-center gap-2 rounded-[14px] border border-line bg-surface text-sm font-semibold"
+          >
+            <span className="h-5 w-5 text-primary-ink">
+              <Icon name="share" />
+            </span>
+            Digər tətbiqlə aç
+          </a>
+        )}
+      </div>
+      <button
+        type="button"
+        onClick={copy}
+        className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[14px] text-sm font-semibold text-muted"
+      >
+        <span className="h-4 w-4">
+          <Icon name="copy" />
+        </span>
+        <span className="font-mono">{ll}</span> · kopyala
+      </button>
+    </section>
   );
 }
 

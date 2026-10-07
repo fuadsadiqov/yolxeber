@@ -4,6 +4,12 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — Yer addımının layout-u və xarici xəritələr
+
+- **Problem:** ünvan axtarışı/seçimindən sonra alt panel hündürləşirdi. "Mənim yerim" düyməsi sabit `bottom: 250px` mövqeyində olduğu üçün panelin altında qalırdı, nəticə siyahısı mərkəz pinini örtürdü. Problem 385×866 ölçüsündə təkrarlandı.
+- **Həll:** addım 2 flex layout-a keçirildi. Xəritə panelin üstündə qalan sahəni tutur və panel böyüdükcə kiçilir. Pin və "Mənim yerim" düyməsi xəritə konteynerinin içindədir, ona görə həmişə görünür. Xəritə panelin yuvarlaq künclərinin altına 24px uzanır. Pin konteynerin mərkəzində olduğu üçün seçilən koordinat dəqiq qalır. Nəticə siyahısı maksimum 184px-dir və öz daxilində sürüşür.
+- **Detalda "Xəritə tətbiqində aç" bölməsi:** Google Maps, Waze (naviqasiya), Apple Xəritələr və Yandex üçün universal linklər var. Tətbiq quraşdırılıbsa tətbiq, deyilsə veb versiya açılır. Android-də `geo:` linki ilə sistemin tətbiq seçimi təklif olunur. Koordinatı kopyalamaq da mümkündür.
+
 ## 2026-10-07 — Tam ekran şəkil və ünvan axtarışı
 
 - **Detal səhifəsində şəkilə toxunanda tam ekran baxış açılır** (`MediaViewer`):
