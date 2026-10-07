@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
+import { InstallButton } from "./InstallButton";
 import { ThemeToggle } from "./theme";
 
 export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
@@ -49,6 +50,7 @@ export function AppHeader() {
           );
         })}
       </nav>
+      <InstallButton variant="pill" />
       <ThemeToggle className="shadow-none" />
       <Link
         href="/bildir"
@@ -67,6 +69,7 @@ export function AppHeader() {
 export function TopActions({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <div className={`flex gap-2 ${className}`} style={style}>
+      <InstallButton />
       <Link
         href="/xeberdarliqlar"
         aria-label="Xəbərdarlıqlar"

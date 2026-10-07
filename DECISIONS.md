@@ -4,6 +4,18 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — Ana ekrana əlavə etmə (PWA quraşdırma)
+
+- Brauzerlər tətbiqi tam avtomatik quraşdırmağa icazə vermir, ona görə bir toxunuşla quraşdırma qurulub:
+  - **Android/masaüstü Chromium:** `beforeinstallprompt` hadisəsi səhifə açılan kimi tutulur (root layout, `InstallProvider`). Düymə sistemin quraşdırma pəncərəsini açır.
+  - **iPhone/iPad:** Apple API vermir, ona görə "Paylaş → Ana ekrana əlavə et" təlimatı göstərilir.
+- **Düymələr:** mobil başlıqda ikon, masaüstü başlıqda "Tətbiqi yüklə", Xəbərdarlıqlar səhifəsində kart. Quraşdırılıbsa (`display-mode: standalone`) görünmür.
+- **İlk giriş pəncərəsi** (ekranın ortasında, 4 saniyə sonra çıxır):
+  - "Sonra" basılanda və ya sistem pəncərəsində imtina olunanda 3 gün göstərilmir (localStorage);
+  - quraşdırılıbsa heç vaxt göstərilmir;
+  - admin, bildiriş forması və redaktə səhifələrində çıxmır.
+  - Brauzerdə yoxlanılıb: 4 saniyədən sonra çıxır, "Sonra"-dan sonra yeniləmədə çıxmır, 3 gün keçəndən sonra yenidən çıxır.
+
 ## 2026-10-07 — Stop kateqoriyası və bildirişin redaktəsi
 
 - **Yeni kateqoriya "Stop nişanının tələbi pozulması"** (`stop`): `drizzle/0003_stop_category_edit.sql` (`ALTER TYPE ... ADD VALUE`), səkkizbucaqlı ikon, tünd-qırmızı rəng (tünd temada mətn açıq tonda). Migration PGlite-da tranzaksiya daxilində yoxlanılıb.

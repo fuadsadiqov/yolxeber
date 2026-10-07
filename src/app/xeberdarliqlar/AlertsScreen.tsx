@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { InstallButton } from "@/components/layout/InstallButton";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
 import { api, ApiError } from "@/lib/client/api";
@@ -64,6 +65,8 @@ export function AlertsScreen() {
       <p className="mb-4 text-[0.9375rem] leading-normal text-muted">
         Bildirişləri aktiv etsəniz, sürücülər yeni nişan, kamera və ya qayda dəyişikliyi paylaşan kimi telefonunuza xəbər gələcək.
       </p>
+
+      <InstallButton variant="card" className="mb-3" />
 
       <PushCard state={push} onEnable={turnOnPush} onDisable={async () => (await disablePush(), setPush("off"))} />
 

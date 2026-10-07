@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { InstallPrompt } from "@/components/layout/InstallPrompt";
 import { ThemeScript } from "@/components/layout/theme";
 import { ToastProvider } from "@/components/ui/Toast";
 import { GeoProvider } from "@/lib/client/geo";
+import { InstallProvider } from "@/lib/client/install";
 // Poppins paketin içindədir (@fontsource) — build zamanı Google Fonts-a çıxış lazım deyil,
 // latin-ext alt dəsti Azərbaycan hərflərini (ə, ğ, ı, ö, ş, ü, ç) əhatə edir.
 import "@fontsource/poppins/400.css";
@@ -37,7 +39,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans">
         <GeoProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <InstallProvider>
+            <ToastProvider>
+              {children}
+              <InstallPrompt />
+            </ToastProvider>
+          </InstallProvider>
         </GeoProvider>
       </body>
     </html>
