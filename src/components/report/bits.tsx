@@ -38,7 +38,7 @@ export function CategoryLabel({ category, short = false }: { category: CategoryK
   return (
     <span
       className="text-xs font-bold text-[var(--t)] dark:text-[var(--td)]"
-      style={{ ["--t" as string]: c.text, ["--td" as string]: c.key === "diger" ? "#98A4B8" : c.key === "stop" ? "#F87171" : c.color }}
+      style={{ ["--t" as string]: c.text, ["--td" as string]: c.key === "diger" ? "#98A4B8" : c.key === "stop" ? "#F87171" : c.key === "istiqamet" ? "#A78BFA" : c.color }}
     >
       {short ? c.short : c.name}
     </span>

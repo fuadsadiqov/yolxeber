@@ -42,6 +42,8 @@ export const PATHS = {
   surat: "M4.5 17a8 8 0 1 1 15 0M12 15l4-5M12 15h.01",
   kamera: "M3 7.5l12 3.5-1.6 4.5L3 12zM15 11l4 1.2M8 13.8 7 19H3",
   zolaq: "M5 3v18M19 3v18M12 3v3M12 10v4M12 18v3",
+  // Əks istiqamətli iki ox — hərəkət istiqamətinin dəyişməsi
+  istiqamet: "M7 20V4M3 8l4-4 4 4M17 4v16M13 16l4 4 4-4",
   donus: "M8 20v-9a4 4 0 0 1 8 0v5M13 13l3 3 3-3M3 3l18 18",
   park: "M9 20V4h5a4.5 4.5 0 0 1 0 9H9",
   // Səkkizbucaqlı STOP nişanı + üfüqi xətt

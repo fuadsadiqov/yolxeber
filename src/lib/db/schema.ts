@@ -18,7 +18,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { geographyPoint } from "./geography";
 
-export const reportCategory = pgEnum("report_category", ["nisan", "surat", "kamera", "zolaq", "donus", "park", "stop", "diger"]);
+export const reportCategory = pgEnum("report_category", ["nisan", "surat", "kamera", "zolaq", "istiqamet", "donus", "park", "stop", "diger"]);
 export const reportStatus = pgEnum("report_status", ["active", "verified", "outdated", "hidden", "deleted"]);
 export const voteKind = pgEnum("vote_kind", ["confirm", "outdated"]);
 export const mediaKind = pgEnum("media_kind", ["image", "video"]);

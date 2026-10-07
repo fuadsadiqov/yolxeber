@@ -4,6 +4,13 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — v1.1.0: "Hərəkət istiqaməti dəyişib" kateqoriyası
+
+- `istiqamet` dəyəri `drizzle/0004_direction_category.sql` ilə enum-a əlavə olundu (PGlite-da tranzaksiya daxilində yoxlanılıb).
+- Kateqoriya "Xətt / zolaq dəyişikliyi"-ndən sonra gəlir: məna baxımından ona yaxındır.
+- Bənövşəyi rəngdədir (`#7C3AED`), çünki digər kateqoriyaların rəngləri ilə qarışmır. Tünd temada mətn açıq tonda göstərilir.
+- Yeni funksiya olduğu üçün MINOR versiya artırıldı.
+
 ## 2026-10-07 — v1.0.1: panellərin TabBar altında qalması
 
 - **Səbəb:** `Sheet` komponenti çağırıldığı yerin içində render olunurdu. Mobil xəritə ekranında düymələr `z-[600]` qatındadır, ona görə `fixed` + `z-[1500]` panel həmin qatın içində qalırdı və TabBar-ın (`z-[1000]`) altına düşürdü. 385×866 ölçüsündə təkrarlanıb.

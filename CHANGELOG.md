@@ -10,6 +10,11 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 
 ## [Buraxılmamış]
 
+## [1.1.0] — 2026-10-07
+
+### Əlavə olundu
+- Yeni kateqoriya: **"Hərəkət istiqaməti dəyişib"** (məs. küçə birtərəfli edilib, istiqamət tərsinə çevrilib). Əks istiqamətli oxlar ikonu, bənövşəyi rəng.
+
 ## [1.0.1] — 2026-10-07
 
 ### Düzəldildi
@@ -41,6 +46,7 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 - Açıq və tünd tema, Poppins şrifti, Azərbaycan dilində interfeys.
 - Docker deploy: PostGIS, app, mövcud reverse proxy ilə inteqrasiya.
 
-[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.1...HEAD
+[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/fuadsadiqov/yolxeber/releases/tag/v1.0.0
