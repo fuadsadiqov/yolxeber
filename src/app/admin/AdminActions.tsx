@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CategoryLabel } from "@/components/report/bits";
-import type { AdminReport } from "@/lib/admin";
+import type { AdminComment, AdminReport } from "@/lib/admin";
 
 const REASONS: Record<string, string> = {
   wrong: "Səhv məlumat",
@@ -133,6 +133,63 @@ export function AdminReportRow({ r }: { r: AdminReport }) {
             </button>
           )}
         </div>
+      </div>
+    </article>
+  );
+}
+
+export function AdminCommentRow({ c }: { c: AdminComment }) {
+  const { busy, error, run } = useAction();
+  const btn = "h-10 rounded-xl px-3.5 text-sm font-semibold disabled:opacity-50";
+  return (
+    <article className="rounded-2xl bg-surface p-4">
+      <div className="flex flex-wrap items-center gap-2 text-[0.8125rem] text-muted">
+        <span className={`rounded-full px-2 py-0.5 text-[0.6875rem] font-bold ${c.hidden ? "bg-danger-soft text-danger-soft-ink" : "bg-line-soft text-muted"}`}>
+          {c.hidden ? "Gizlədilib" : "Görünür"}
+        </span>
+        <span>
+          şikayət <b className="text-danger-ink">{c.flagCount}</b>
+        </span>
+        <span>· {new Date(c.createdAt).toLocaleString("az-AZ")}</span>
+        <span>
+          · cihaz <span className="font-mono">{c.deviceId.slice(0, 8)}</span>
+          {c.deviceBlocked && <b className="text-danger-ink"> (bloklanıb)</b>}
+        </span>
+      </div>
+      <p className="mt-2 whitespace-pre-line text-[0.9375rem]">{c.body}</p>
+      <Link href={`/bildiris/${c.reportId}`} target="_blank" className="mt-1 block text-[0.8125rem] font-semibold text-primary-ink hover:underline">
+        Bildiriş: {c.reportTitle}
+      </Link>
+      {error && <p className="mt-2 text-sm font-semibold text-danger-ink">{error}</p>}
+      <div className="mt-3 flex flex-wrap gap-2">
+        {c.hidden && (
+          <button
+            type="button"
+            disabled={!!busy}
+            onClick={() => run("restore", () => post(`/api/admin/comments/${c.id}`, { action: "restore" }))}
+            className={`${btn} bg-primary text-white`}
+          >
+            {busy === "restore" ? "…" : "Bərpa et"}
+          </button>
+        )}
+        <button
+          type="button"
+          disabled={!!busy}
+          onClick={() => run("delete", () => post(`/api/admin/comments/${c.id}`, { action: "delete" }))}
+          className={`${btn} border-[0.0938rem] border-line-strong text-danger-ink`}
+        >
+          {busy === "delete" ? "…" : "Sil"}
+        </button>
+        {!c.deviceBlocked && (
+          <button
+            type="button"
+            disabled={!!busy}
+            onClick={() => run("block", () => post(`/api/admin/devices/${c.deviceId}`, { action: "block", reason: "Rəy", hideReports: false }))}
+            className={`${btn} border-[0.0938rem] border-line-strong`}
+          >
+            {busy === "block" ? "…" : "Cihazı blokla"}
+          </button>
+        )}
       </div>
     </article>
   );

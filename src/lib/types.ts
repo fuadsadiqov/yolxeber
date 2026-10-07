@@ -66,6 +66,20 @@ export type AlertZone = {
   enabled: boolean;
 };
 
+export type CommentItem = {
+  id: string;
+  body: string;
+  createdAt: string;
+  /** Hər bildiriş üçün ayrıca təxəllüs, məs. "A3F9" → "Sürücü A3F9" */
+  nickname: string;
+  /** Rəyi bildirişin müəllifi yazıb */
+  isAuthor: boolean;
+  isMine: boolean;
+  myFlagged: boolean;
+};
+
+export type CommentPage = { items: CommentItem[]; total: number; nextCursor: string | null };
+
 /** API xəta kodları → istifadəçiyə göstərilən mətn */
 export const API_ERRORS: Record<string, string> = {
   rate_limited: "Saatda maksimum bildiriş sayına çatdınız. Bir az sonra yenidən cəhd edin.",
@@ -82,4 +96,7 @@ export const API_ERRORS: Record<string, string> = {
   video_unsupported: "Video emalı hazırda mümkün deyil. Şəkil əlavə edin.",
   too_many_files: "Ən çox 4 fayl əlavə etmək olar.",
   push_not_configured: "Push bildirişləri serverdə konfiqurasiya olunmayıb.",
+  comment_rate_limited: "Saatda maksimum rəy sayına çatdınız. Bir az sonra yenidən yazın.",
+  comment_too_fast: "Rəylər arasında bir neçə saniyə gözləyin.",
+  own_comment: "Öz rəyinizdən şikayət edə bilməzsiniz.",
 };

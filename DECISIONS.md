@@ -4,6 +4,21 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — Rəylər və push bildirişlərinin hamıya göndərilməsi
+
+- **Rəylər** (detal səhifəsinin ən aşağısı), `drizzle/0002_comments.sql`:
+  - qonaq modeli: rəy cihaza bağlıdır, ad yerinə hər bildiriş üçün ayrıca təxəllüs göstərilir (`md5(cihaz+bildiriş)` → "Sürücü A3F9"), ona görə eyni cihazın müxtəlif bildirişlərdəki rəyləri bir-birinə bağlanmır;
+  - bildiriş müəllifinin rəyində "Müəllif", öz rəyində "Siz" nişanı;
+  - maksimum 500 simvol; cihaz başına saatda 10 rəy və rəylər arasında ən az 10 saniyə (advisory lock ilə);
+  - şikayət: 3 şikayətdə avtomatik gizlədilir (bildirişlərlə eyni hədd), öz rəyinə şikayət qadağandır;
+  - istifadəçi öz rəyini silə bilir;
+  - admin paneldə yeni "Rəylər" bölməsi: bərpa, silmə, cihazı bloklama.
+  - Migration və trigger-lər PGlite-da test olunub.
+- **Push: hər yeni bildiriş bütün abunəçilərə göndərilir**, məsafə və ərazidən asılı olmayaraq (istifadəçinin tələbi). Müəllif özü və bloklanmış cihazlar istisnadır. Göndəriş 50-lik dəstələrlə olur.
+  - Əvvəlki ərazi (zona) filtri UI-dan çıxarıldı. `alert_zones` cədvəli və API-ləri gələcəkdə yenidən aktivləşdirmək üçün saxlanılıb.
+  - Əvvəlki qurulumda ərazi yaradılmayanda push heç kimə getmirdi. Bildirişlərin gəlməməsinin səbəbi bu ola bilərdi.
+- **Xəbərdarlıqlar səhifəsi:** push-u açıb-bağlamaq, "Test bildirişi göndər" (`POST /api/push/test`, diaqnostika üçün) və iPhone/öz bildirişi barədə izahlar.
+
 ## 2026-10-07 — UI ölçüləri 15% kiçildildi
 
 - Bütün Tailwind `[Npx]` dəyərləri (279 ədəd) və inline `style` px ölçüləri (18 ədəd) rem-ə çevrildi (16px = 1rem). Kök şrift `html { font-size: 85% }` edildi. Nəticədə düymələr, mətnlər, ikonlar və aralarındakı boşluqlar dizayndan mütənasib olaraq 15% kiçikdir.

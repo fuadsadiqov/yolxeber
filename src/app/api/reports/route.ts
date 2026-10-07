@@ -11,7 +11,7 @@ import {
   processVideo,
   type ProcessedMedia,
 } from "@/lib/media-server";
-import { notifyZonesForReport } from "@/lib/push";
+import { notifyAllForReport } from "@/lib/push";
 import { assertUnderRateLimit, createReport } from "@/lib/report-create";
 import { ReportActionError, reportsInBbox } from "@/lib/reports";
 
@@ -78,6 +78,6 @@ export const POST = handle(async (req: Request) => {
 
   const id = await createReport({ deviceId, ...fields, media });
   // Push göndərişi cavabı gecikdirməsin — cavab getdikdən sonra icra olunur.
-  after(() => notifyZonesForReport(id).catch((e) => console.error("push xətası", e)));
+  after(() => notifyAllForReport(id).catch((e) => console.error("push xətası", e)));
   return NextResponse.json({ id }, { status: 201 });
 });

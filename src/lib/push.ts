@@ -18,11 +18,11 @@ export function pushConfigured() {
 export type PushPayload = { title: string; body: string; url: string; tag?: string };
 
 /**
- * Yeni bildirişə uyğun gələn xəbərdarlıq zonalarının sahiblərinə push göndərir.
- * Zona uyğunluğu: mərkəzdən radius daxilində + kateqoriya seçilib + müəllifin öz zonası deyil.
- * ST_DWithin(..., 20000) GIST indeksindən istifadə edir, ikinci şərt zonanın öz radiusunu yoxlayır.
+ * Yeni bildirişi bildirişləri aktiv etmiş bütün cihazlara göndərir — məsafədən asılı olmayaraq.
+ * İstisnalar: bildirişin müəllifi (öz bildirişi haqqında xəbər almır) və bloklanmış cihazlar.
+ * (Ərazi/zona filtri hazırda istifadə olunmur — alert_zones cədvəli gələcək üçün qalır.)
  */
-export async function notifyZonesForReport(reportId: string) {
+export async function notifyAllForReport(reportId: string) {
   if (!pushConfigured()) return;
 
   const targets = await sql<
@@ -31,38 +31,46 @@ export async function notifyZonesForReport(reportId: string) {
       endpoint: string;
       p256dh: string;
       auth: string;
-      zone_name: string;
       category: CategoryKey;
       note: string;
       address: string | null;
+      locality: string | null;
     }[]
   >`
-    SELECT DISTINCT ON (s.id) s.id AS sub_id, s.endpoint, s.p256dh, s.auth, z.name AS zone_name,
-           r.category, r.note, r.address
+    SELECT s.id AS sub_id, s.endpoint, s.p256dh, s.auth, r.category, r.note, r.address, r.locality
     FROM reports r
-    JOIN alert_zones z
-      ON z.enabled
-     AND ST_DWithin(z.center, r.location, 20000)
-     AND ST_DWithin(z.center, r.location, z.radius_m)
-     AND r.category = ANY (z.categories)
-     AND z.device_id <> r.device_id
-    JOIN push_subscriptions s ON s.device_id = z.device_id
-    WHERE r.id = ${reportId}::uuid AND r.status IN ('active', 'verified')
-    ORDER BY s.id, z.created_at`;
+    JOIN push_subscriptions s ON s.device_id <> r.device_id
+    JOIN devices d ON d.id = s.device_id AND d.blocked_at IS NULL
+    WHERE r.id = ${reportId}::uuid AND r.status IN ('active', 'verified')`;
+  if (!targets.length) return;
 
-  await Promise.allSettled(
-    targets.map((t) =>
-      sendPush(
-        { id: t.sub_id, endpoint: t.endpoint, p256dh: t.p256dh, auth: t.auth },
-        {
-          title: `${CATEGORIES[t.category].name} · ${t.zone_name}`,
-          body: [reportTitle(t.note, t.category), t.address].filter(Boolean).join(" — "),
-          url: `/bildiris/${reportId}`,
-          tag: reportId,
-        },
-      ),
+  const t0 = targets[0];
+  const payload: PushPayload = {
+    title: CATEGORIES[t0.category].name,
+    body: [reportTitle(t0.note, t0.category), [t0.address, t0.locality].filter(Boolean).join(", ")].filter(Boolean).join(" — "),
+    url: `/bildiris/${reportId}`,
+    tag: reportId,
+  };
+
+  // Push xidmətlərini birdən yükləməmək üçün 50-lik dəstələrlə
+  for (let i = 0; i < targets.length; i += 50) {
+    await Promise.allSettled(
+      targets.slice(i, i + 50).map((t) => sendPush({ id: t.sub_id, endpoint: t.endpoint, p256dh: t.p256dh, auth: t.auth }, payload)),
+    );
+  }
+}
+
+/** Diaqnostika: bu cihazın bütün abunəliklərinə test bildirişi göndərir */
+export async function sendTestPush(deviceId: string) {
+  if (!pushConfigured()) return { configured: false, total: 0, sent: 0 };
+  const subs = await sql<{ id: string; endpoint: string; p256dh: string; auth: string }[]>`
+    SELECT id, endpoint, p256dh, auth FROM push_subscriptions WHERE device_id = ${deviceId}::uuid`;
+  const results = await Promise.all(
+    subs.map((s) =>
+      sendPush(s, { title: "YolXəbər", body: "Test bildirişi — bildirişlər bu cihazda işləyir ✓", url: "/xeberdarliqlar", tag: "test" }),
     ),
   );
+  return { configured: true, total: subs.length, sent: results.filter(Boolean).length };
 }
 
 export async function sendPush(sub: { id: string; endpoint: string; p256dh: string; auth: string }, payload: PushPayload) {

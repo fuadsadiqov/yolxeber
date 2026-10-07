@@ -98,8 +98,9 @@ export async function blockedDevices() {
 }
 
 export async function adminCounts() {
-  const [c] = await sql<{ hidden: number; flagged: number; blocked: number }[]>`
+  const [c] = await sql<{ hidden: number; flagged: number; blocked: number; comments: number }[]>`
     SELECT (SELECT count(*)::int FROM reports WHERE status = 'hidden') AS hidden,
+           (SELECT count(*)::int FROM comments WHERE hidden) AS comments,
            (SELECT count(*)::int FROM reports WHERE flag_count > 0 AND status <> 'deleted') AS flagged,
            (SELECT count(*)::int FROM devices WHERE blocked_at IS NOT NULL) AS blocked`;
   return c;
@@ -148,4 +149,68 @@ export async function unblockDevice(admin: string, deviceId: string) {
   const r = await sql`UPDATE devices SET blocked_at = NULL, block_reason = NULL WHERE id = ${deviceId}::uuid`;
   if (r.count) await audit(admin, "unblock_device", "device", deviceId);
   return r.count > 0;
+}
+
+export type AdminComment = {
+  id: string;
+  reportId: string;
+  reportTitle: string;
+  body: string;
+  hidden: boolean;
+  flagCount: number;
+  moderationLocked: boolean;
+  deviceId: string;
+  deviceBlocked: boolean;
+  createdAt: string;
+};
+
+/** Şikayət olunmuş və ya gizlədilmiş rəylər */
+export async function adminComments(): Promise<AdminComment[]> {
+  const rows = await sql<
+    {
+      id: string;
+      report_id: string;
+      note: string;
+      category: CategoryKey;
+      body: string;
+      hidden: boolean;
+      flag_count: number;
+      moderation_locked: boolean;
+      device_id: string;
+      blocked_at: Date | null;
+      created_at: Date;
+    }[]
+  >`
+    SELECT c.id, c.report_id, r.note, r.category, c.body, c.hidden, c.flag_count, c.moderation_locked,
+           c.device_id, d.blocked_at, c.created_at
+    FROM comments c
+    JOIN reports r ON r.id = c.report_id
+    JOIN devices d ON d.id = c.device_id
+    WHERE c.flag_count > 0 OR c.hidden
+    ORDER BY c.hidden DESC, c.flag_count DESC, c.created_at DESC
+    LIMIT 200`;
+  return rows.map((r) => ({
+    id: r.id,
+    reportId: r.report_id,
+    reportTitle: reportTitle(r.note, r.category),
+    body: r.body,
+    hidden: r.hidden,
+    flagCount: r.flag_count,
+    moderationLocked: r.moderation_locked,
+    deviceId: r.device_id,
+    deviceBlocked: !!r.blocked_at,
+    createdAt: r.created_at.toISOString(),
+  }));
+}
+
+export async function restoreComment(admin: string, id: string) {
+  const r = await sql`UPDATE comments SET hidden = false, moderation_locked = true WHERE id = ${id}::uuid`;
+  if (r.count) await audit(admin, "restore", "comment", id);
+  return r.count > 0;
+}
+
+export async function deleteComment(admin: string, id: string) {
+  const [row] = await sql<{ body: string }[]>`DELETE FROM comments WHERE id = ${id}::uuid RETURNING body`;
+  if (row) await audit(admin, "delete", "comment", id, { body: row.body });
+  return !!row;
 }

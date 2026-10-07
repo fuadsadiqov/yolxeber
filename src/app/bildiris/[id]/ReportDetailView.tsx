@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { StatusBadge, STRIPES } from "@/components/report/bits";
+import { Comments } from "@/components/report/Comments";
 import { MediaViewer } from "@/components/report/MediaViewer";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { Sheet } from "@/components/ui/Sheet";
@@ -295,6 +296,8 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             {r.myFlagged ? "Şikayətiniz qəbul edilib" : "Səhv məlumat / şikayət et"}
           </button>
         )}
+
+        <Comments reportId={r.id} />
       </div>
 
       {viewerAt != null && <MediaViewer media={r.media} start={viewerAt} title={r.title} onClose={closeViewer} />}

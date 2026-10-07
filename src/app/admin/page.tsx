@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { adminCounts, adminReports, blockedDevices, requireAdmin } from "@/lib/admin";
+import { adminComments, adminCounts, adminReports, blockedDevices, requireAdmin } from "@/lib/admin";
 import { LogoutButton } from "./LogoutButton";
-import { AdminReportRow, UnblockButton } from "./AdminActions";
+import { AdminCommentRow, AdminReportRow, UnblockButton } from "./AdminActions";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -11,6 +11,7 @@ const TABS = [
   { key: "hidden", label: "Gizlədilənlər" },
   { key: "flagged", label: "Şikayət olunanlar" },
   { key: "recent", label: "Son bildirişlər" },
+  { key: "comments", label: "Rəylər" },
   { key: "blocked", label: "Bloklanmış cihazlar" },
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
@@ -20,7 +21,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const tabParam = (await searchParams).tab;
   const tab: Tab = TABS.some((t) => t.key === tabParam) ? (tabParam as Tab) : "hidden";
   const counts = await adminCounts();
-  const badge: Partial<Record<Tab, number>> = { hidden: counts.hidden, flagged: counts.flagged, blocked: counts.blocked };
+  const badge: Partial<Record<Tab, number>> = {
+    hidden: counts.hidden,
+    flagged: counts.flagged,
+    blocked: counts.blocked,
+    comments: counts.comments,
+  };
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-6">
@@ -56,7 +62,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         ))}
       </nav>
 
-      <section className="mt-4 flex flex-col gap-3">{tab === "blocked" ? <Blocked /> : <Reports tab={tab} />}</section>
+      <section className="mt-4 flex flex-col gap-3">{tab === "blocked" ? <Blocked /> : tab === "comments" ? <Comments /> : <Reports tab={tab} />}</section>
     </main>
   );
 }
@@ -65,6 +71,12 @@ async function Reports({ tab }: { tab: "hidden" | "flagged" | "recent" }) {
   const rows = await adminReports(tab);
   if (!rows.length) return <p className="rounded-2xl bg-surface p-6 text-center text-muted">Burada hələ heç nə yoxdur.</p>;
   return rows.map((r) => <AdminReportRow key={r.id} r={r} />);
+}
+
+async function Comments() {
+  const rows = await adminComments();
+  if (!rows.length) return <p className="rounded-2xl bg-surface p-6 text-center text-muted">Şikayət olunmuş rəy yoxdur.</p>;
+  return rows.map((c) => <AdminCommentRow key={c.id} c={c} />);
 }
 
 async function Blocked() {
