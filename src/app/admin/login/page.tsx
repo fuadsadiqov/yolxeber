@@ -39,16 +39,16 @@ export default function AdminLoginPage() {
   }
 
   const input =
-    "h-14 w-full rounded-2xl border-[1.5px] border-line-strong bg-surface px-4 text-base text-ink outline-none focus:border-primary";
+    "h-14 w-full rounded-2xl border-[0.0938rem] border-line-strong bg-surface px-4 text-base text-ink outline-none focus:border-primary";
 
   return (
     <main className="flex min-h-dvh items-center justify-center px-4">
       <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-3">
         <div className="mb-4 flex items-center gap-3">
           <span className="flex h-8 w-8 items-center justify-center">
-            <span className="h-5 w-5 rotate-45 rounded-[3px] border-[3px] border-white bg-accent outline-2 outline-ink" />
+            <span className="h-5 w-5 rotate-45 rounded-[0.1875rem] border-[0.1875rem] border-white bg-accent outline-2 outline-ink" />
           </span>
-          <span className="text-[22px] font-bold tracking-tight">YolXəbər · Admin</span>
+          <span className="text-[1.375rem] font-bold tracking-tight">YolXəbər · Admin</span>
         </div>
         <label className="text-sm font-semibold text-muted" htmlFor="username">
           İstifadəçi adı
@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={busy}
-          className="mt-2 h-14 rounded-2xl bg-primary text-[17px] font-bold text-white disabled:opacity-60"
+          className="mt-2 h-14 rounded-2xl bg-primary text-[1.0625rem] font-bold text-white disabled:opacity-60"
         >
           {busy ? "Yoxlanılır…" : "Daxil ol"}
         </button>

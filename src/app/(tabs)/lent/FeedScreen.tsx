@@ -42,7 +42,7 @@ export function FeedScreen() {
   return (
     <main className="pb-tabbar mx-auto min-h-dvh max-w-2xl px-4 pt-[env(safe-area-inset-top)] md:pb-10">
       <header className="flex h-14 items-center justify-between md:mt-4">
-        <h1 className="text-[28px] font-bold">Lent</h1>
+        <h1 className="text-[1.75rem] font-bold">Lent</h1>
         <TopActions className="md:hidden" />
       </header>
       <p className="mb-3.5 min-h-6 text-sm text-muted">

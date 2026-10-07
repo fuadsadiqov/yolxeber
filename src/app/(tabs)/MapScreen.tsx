@@ -129,9 +129,9 @@ export function MapScreen() {
   return (
     <div className="flex min-h-0 flex-1">
       {/* Masaüstü sol panel (dizayn 11) */}
-      <aside className="hidden w-[440px] flex-none flex-col gap-3.5 overflow-y-auto border-r border-line bg-bg px-5 pt-5 pb-6 md:flex">
+      <aside className="hidden w-[27.5rem] flex-none flex-col gap-3.5 overflow-y-auto border-r border-line bg-bg px-5 pt-5 pb-6 md:flex">
         <div>
-          <h1 className="text-[22px] font-bold">Yaxınlıqdakı son dəyişikliklər</h1>
+          <h1 className="text-[1.375rem] font-bold">Yaxınlıqdakı son dəyişikliklər</h1>
           <p className="mt-0.5 text-sm text-muted">
             {locality ?? "Bakı"} · {NEAR_RADIUS / 1000} km{nearby ? ` · ${nearby.items.length} bildiriş` : ""}
           </p>
@@ -154,12 +154,12 @@ export function MapScreen() {
 
         {/* Yuxarı keçid (status bar altında oxunaqlılıq üçün) */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-[500] h-[90px] md:hidden"
+          className="pointer-events-none absolute inset-x-0 top-0 z-[500] h-[5.625rem] md:hidden"
           style={{ background: "linear-gradient(var(--bg) 40%, transparent)" }}
         />
         <TopActions
           className="absolute right-4 z-[600] md:hidden"
-          style={{ top: "calc(env(safe-area-inset-top) + 8px)" }}
+          style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}
         />
 
         {selectedId && <SelectedCard id={selectedId} onClose={() => select(null)} />}
@@ -167,7 +167,7 @@ export function MapScreen() {
         {/* Masaüstü: mövqe + zoom düymələri (dizayn 11) */}
         <div className="absolute bottom-6 right-5 z-[600] hidden flex-col gap-2.5 md:flex">
           <MapButton icon="locate" label="Mənim yerim" onClick={onLocate} />
-          <div className="flex w-12 flex-col rounded-[14px] bg-surface text-ink shadow-float dark:border dark:border-line">
+          <div className="flex w-12 flex-col rounded-[0.875rem] bg-surface text-ink shadow-float dark:border dark:border-line">
             <button type="button" aria-label="Yaxınlaşdır" onClick={() => mapRef.current?.zoomIn()} className="flex h-12 items-center justify-center border-b border-line">
               <span className="h-5 w-5"><Icon name="plus" /></span>
             </button>
@@ -180,14 +180,14 @@ export function MapScreen() {
         {/* Mobil: alt panel + üzən düymələr. Konteyner toxunuşları tutmur — boş sahədə xəritə sürüşdürülə bilsin. */}
         <div
           className="pointer-events-none absolute inset-x-0 z-[600] md:hidden"
-          style={{ bottom: "calc(84px + env(safe-area-inset-bottom))" }}
+          style={{ bottom: "calc(5.25rem + env(safe-area-inset-bottom))" }}
         >
           {!expanded && (
             <div className="flex flex-col items-end gap-3 px-4 pb-4">
               <MapButton icon="locate" label="Mənim yerim" onClick={onLocate} big />
               <Link
                 href="/bildir"
-                className="pointer-events-auto flex h-[58px] items-center gap-2 rounded-full bg-accent pl-[18px] pr-6 text-[17px] font-bold text-accent-ink shadow-fab"
+                className="pointer-events-auto flex h-[3.625rem] items-center gap-2 rounded-full bg-accent pl-[1.125rem] pr-6 text-[1.0625rem] font-bold text-accent-ink shadow-fab"
               >
                 <span className="h-6 w-6"><Icon name="plus" /></span>
                 Bildir
@@ -199,7 +199,7 @@ export function MapScreen() {
           <section
             aria-label="Yaxınlıqdakı son dəyişikliklər"
             className="pointer-events-auto flex flex-col rounded-t-3xl bg-surface px-4 shadow-sheet transition-[height] duration-200 dark:border-t dark:border-line"
-            style={{ height: expanded && !empty ? "min(72dvh, 640px)" : "auto" }}
+            style={{ height: expanded && !empty ? "min(72dvh, 40rem)" : "auto" }}
           >
             <button
               type="button"
@@ -208,13 +208,13 @@ export function MapScreen() {
               aria-label={expanded ? "Paneli kiçilt" : "Paneli genişləndir"}
               className="flex w-full flex-none flex-col pb-3 text-left"
             >
-              <span className="flex h-[19px] w-full items-center justify-center">
-                <span className="h-[5px] w-10 rounded-full bg-line-strong" />
+              <span className="flex h-[1.1875rem] w-full items-center justify-center">
+                <span className="h-[0.3125rem] w-10 rounded-full bg-line-strong" />
               </span>
               <span className="flex w-full items-start justify-between gap-3">
                 <span>
                   <span className="block text-lg font-bold">Yaxınlıqdakı son dəyişikliklər</span>
-                  <span className="mt-0.5 block text-[13px] text-muted">
+                  <span className="mt-0.5 block text-[0.8125rem] text-muted">
                     {subtitle}
                     {nearby ? ` · ${nearby.items.length} bildiriş` : ""}
                   </span>
@@ -235,18 +235,18 @@ export function MapScreen() {
             {expanded &&
               (empty ? (
                 <div className="flex flex-col items-center px-2 pb-6 pt-2.5 text-center">
-                  <span className="mb-4 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-primary-soft text-primary-ink">
-                    <span className="h-[34px] w-[34px]"><Icon name="pin" /></span>
+                  <span className="mb-4 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-primary-soft text-primary-ink">
+                    <span className="h-[2.125rem] w-[2.125rem]"><Icon name="pin" /></span>
                   </span>
                   <div className="mb-2 text-xl font-bold">Bu ərazidə hələ bildiriş yoxdur</div>
-                  <p className="mb-5 text-[15px] leading-normal text-pretty text-muted">
+                  <p className="mb-5 text-[0.9375rem] leading-normal text-pretty text-muted">
                     Yeni nişan və ya kamera görsəniz, ilk bildirişi siz paylaşın.
                   </p>
                   <Link
                     href="/bildir"
-                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent text-[17px] font-bold text-accent-ink"
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent text-[1.0625rem] font-bold text-accent-ink"
                   >
-                    <span className="h-[22px] w-[22px]"><Icon name="plus" /></span>
+                    <span className="h-[1.375rem] w-[1.375rem]"><Icon name="plus" /></span>
                     Bildir
                   </Link>
                 </div>
@@ -254,7 +254,7 @@ export function MapScreen() {
                 <div className="min-h-0 flex-1 overflow-y-auto">
                   {!nearby && !nearbyFailed &&
                     [1, 2].map((i) => (
-                      <div key={i} className="flex min-h-[72px] items-center gap-3 border-t border-line-soft">
+                      <div key={i} className="flex min-h-[4.5rem] items-center gap-3 border-t border-line-soft">
                         <span className="h-11 w-11 rounded-xl bg-skeleton" />
                         <div className="flex flex-1 flex-col gap-2">
                           <span className="h-3.5 w-3/4 rounded bg-surface-muted" />
@@ -285,10 +285,10 @@ function MapButton({ icon, label, onClick, big = false }: { icon: "locate"; labe
       aria-label={label}
       title={label}
       className={`pointer-events-auto flex items-center justify-center bg-surface text-primary-ink shadow-float dark:border dark:border-line dark:text-ink ${
-        big ? "h-[52px] w-[52px] rounded-2xl" : "h-12 w-12 rounded-[14px]"
+        big ? "h-[3.25rem] w-[3.25rem] rounded-2xl" : "h-12 w-12 rounded-[0.875rem]"
       }`}
     >
-      <span className={big ? "h-6 w-6" : "h-[22px] w-[22px]"}>
+      <span className={big ? "h-6 w-6" : "h-[1.375rem] w-[1.375rem]"}>
         <Icon name={icon} />
       </span>
     </button>

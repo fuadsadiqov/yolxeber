@@ -63,23 +63,23 @@ export function AdminReportRow({ r }: { r: AdminReport }) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <CategoryLabel category={r.category} />
-          <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${stCls}`}>{st}</span>
-          {r.moderationLocked && <span className="text-[11px] font-semibold text-muted">· admin bərpa edib</span>}
+          <span className={`rounded-full px-2 py-0.5 text-[0.6875rem] font-bold ${stCls}`}>{st}</span>
+          {r.moderationLocked && <span className="text-[0.6875rem] font-semibold text-muted">· admin bərpa edib</span>}
         </div>
         <Link href={`/bildiris/${r.id}`} target="_blank" className="mt-1 block font-semibold hover:underline">
           {r.title}
         </Link>
         {r.note && r.note !== r.title && <p className="mt-0.5 line-clamp-2 text-sm text-muted">{r.note}</p>}
-        <p className="mt-1 text-[13px] text-muted">
+        <p className="mt-1 text-[0.8125rem] text-muted">
           {[r.address, r.locality, new Date(r.createdAt).toLocaleString("az-AZ")].filter(Boolean).join(" · ")}
         </p>
-        <p className="mt-1 text-[13px] text-muted">
+        <p className="mt-1 text-[0.8125rem] text-muted">
           təsdiq {r.confirmCount} · aktual deyil {r.outdatedCount} · şikayət <b className="text-danger-ink">{r.flagCount}</b> · cihaz{" "}
           <span className="font-mono">{r.deviceId.slice(0, 8)}</span>
           {r.deviceBlocked && <b className="text-danger-ink"> (bloklanıb)</b>}
         </p>
         {r.flags.length > 0 && (
-          <ul className="mt-2 flex flex-col gap-1 rounded-xl bg-bg p-2.5 text-[13px]">
+          <ul className="mt-2 flex flex-col gap-1 rounded-xl bg-bg p-2.5 text-[0.8125rem]">
             {r.flags.slice(0, 5).map((f, i) => (
               <li key={i}>
                 <b>{REASONS[f.reason] ?? f.reason}</b>
@@ -110,12 +110,12 @@ export function AdminReportRow({ r }: { r: AdminReport }) {
               >
                 {busy === "delete" ? "…" : "Bəli, sil"}
               </button>
-              <button type="button" onClick={() => setConfirmDelete(false)} className={`${btn} border-[1.5px] border-line-strong`}>
+              <button type="button" onClick={() => setConfirmDelete(false)} className={`${btn} border-[0.0938rem] border-line-strong`}>
                 Ləğv
               </button>
             </>
           ) : (
-            <button type="button" disabled={!!busy} onClick={() => setConfirmDelete(true)} className={`${btn} border-[1.5px] border-line-strong text-danger-ink`}>
+            <button type="button" disabled={!!busy} onClick={() => setConfirmDelete(true)} className={`${btn} border-[0.0938rem] border-line-strong text-danger-ink`}>
               Sil
             </button>
           )}
@@ -126,7 +126,7 @@ export function AdminReportRow({ r }: { r: AdminReport }) {
               onClick={() =>
                 run("block", () => post(`/api/admin/devices/${r.deviceId}`, { action: "block", reason: `Bildiriş ${r.id.slice(0, 8)}`, hideReports: true }))
               }
-              className={`${btn} border-[1.5px] border-line-strong`}
+              className={`${btn} border-[0.0938rem] border-line-strong`}
               title="Cihaz yeni bildiriş, səs və şikayət göndərə bilməyəcək; aktiv bildirişləri gizlədiləcək"
             >
               {busy === "block" ? "…" : "Cihazı blokla"}
@@ -147,7 +147,7 @@ export function UnblockButton({ deviceId }: { deviceId: string }) {
         type="button"
         disabled={!!busy}
         onClick={() => run("unblock", () => post(`/api/admin/devices/${deviceId}`, { action: "unblock" }))}
-        className="h-10 rounded-xl border-[1.5px] border-line-strong px-3.5 text-sm font-semibold disabled:opacity-50"
+        className="h-10 rounded-xl border-[0.0938rem] border-line-strong px-3.5 text-sm font-semibold disabled:opacity-50"
       >
         {busy ? "…" : "Blokdan çıxar"}
       </button>

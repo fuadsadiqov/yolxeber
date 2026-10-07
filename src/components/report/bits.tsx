@@ -2,7 +2,9 @@ import { CATEGORIES, type CategoryKey } from "@/lib/categories";
 import { Icon } from "@/components/ui/Icon";
 import type { ReportStatus } from "@/lib/types";
 
-/** Rəngli kateqoriya ikonu. size — px (kvadrat), radius — künclər. */
+/** Rəngli kateqoriya ikonu. size/icon/radius dizayndakı px dəyərləridir, rem-ə çevrilir (kök şriftlə miqyaslanır). */
+const rem = (px: number) => `${px / 16}rem`;
+
 export function CategoryIcon({
   category,
   size = 44,
@@ -20,10 +22,10 @@ export function CategoryIcon({
   return (
     <span
       className={`flex flex-none items-center justify-center ${className}`}
-      style={{ width: size, height: size, borderRadius: radius, background: c.color, color: c.fg }}
+      style={{ width: rem(size), height: rem(size), borderRadius: typeof radius === "number" ? rem(radius) : radius, background: c.color, color: c.fg }}
       aria-hidden="true"
     >
-      <span style={{ width: icon, height: icon }} className="flex">
+      <span style={{ width: rem(icon), height: rem(icon) }} className="flex">
         <Icon name={c.icon} />
       </span>
     </span>
@@ -51,7 +53,7 @@ export function StatusBadge({ status, size = "sm" }: { status: ReportStatus; siz
     <span
       className={`inline-flex items-center gap-1 rounded-full font-semibold ${
         verified ? "bg-success-soft text-success" : "bg-line-soft text-muted"
-      } ${md ? "h-[30px] gap-[5px] pl-2 pr-3 text-[13px] font-bold" : "py-0.5 pl-1 pr-[7px] text-[11px]"}`}
+      } ${md ? "h-[1.875rem] gap-[0.3125rem] pl-2 pr-3 text-[0.8125rem] font-bold" : "py-0.5 pl-1 pr-[0.4375rem] text-[0.6875rem]"}`}
     >
       <span className={md ? "h-4 w-4" : "h-3 w-3"}>
         <Icon name={verified ? (md ? "shield" : "check") : "ban"} />
@@ -88,7 +90,7 @@ export function Segmented<T extends string>({
             aria-selected={on}
             onClick={() => onChange(o.value)}
             style={{ flexGrow: o.grow ?? 1 }}
-            className={`h-9 basis-0 rounded-[9px] px-1 text-[13px] whitespace-nowrap ${
+            className={`h-9 basis-0 rounded-[0.5625rem] px-1 text-[0.8125rem] whitespace-nowrap ${
               on ? "bg-surface font-bold text-ink shadow-[0_1px_3px_rgba(22,33,28,.12)]" : "font-semibold text-muted"
             }`}
           >

@@ -11,7 +11,7 @@ export function LogoutButton() {
         await fetch("/api/admin/logout", { method: "POST" });
         router.replace("/admin/login");
       }}
-      className="h-10 rounded-xl border-[1.5px] border-line-strong px-3 font-semibold text-ink"
+      className="h-10 rounded-xl border-[0.0938rem] border-line-strong px-3 font-semibold text-ink"
     >
       Çıxış
     </button>

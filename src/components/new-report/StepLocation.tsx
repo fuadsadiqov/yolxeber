@@ -154,20 +154,20 @@ export function StepLocation({
     // Xəritə panelin üstündə qalan sahəni tutur (panel böyüdükcə kiçilir) — pin və "Mənim yerim" həmişə görünür.
     // Xəritə panelin yuvarlaq künclərinin altına 24px uzanır; pin xəritə konteynerinin mərkəzində olduğu üçün
     // seçilən koordinat dəqiq qalır.
-    <div className="absolute inset-x-0 bottom-0 flex flex-col overflow-hidden" style={{ top: "calc(env(safe-area-inset-top) + 136px)" }}>
-      <div className="relative -mb-6 min-h-[200px] flex-1 overflow-hidden">
+    <div className="absolute inset-x-0 bottom-0 flex flex-col overflow-hidden" style={{ top: "calc(env(safe-area-inset-top) + 8.5rem)" }}>
+      <div className="relative -mb-6 min-h-[12.5rem] flex-1 overflow-hidden">
       <MapCanvas ref={mapRef} center={initial} zoom={place || position ? 17 : 13} onViewChange={onView} />
 
-      <div className="pointer-events-none absolute left-1/2 top-3.5 z-[600] flex h-9 -translate-x-1/2 items-center whitespace-nowrap rounded-full bg-[#16211C] px-3.5 text-[13px] font-semibold text-white">
+      <div className="pointer-events-none absolute left-1/2 top-3.5 z-[600] flex h-9 -translate-x-1/2 items-center whitespace-nowrap rounded-full bg-[#16211C] px-3.5 text-[0.8125rem] font-semibold text-white">
         Dəqiqləşdirmək üçün xəritəni sürüşdürün
       </div>
 
       {/* Sabit mərkəz pini — xəritə konteynerinin dəqiq mərkəzində (seçilən koordinat = pinin ucu) */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-[600]">
-        <div className="absolute -ml-[60px] -mt-[60px] h-[120px] w-[120px] rounded-full border-[1.5px] border-[rgba(0,168,107,.4)] bg-[rgba(0,168,107,.12)]" />
-        <div className="absolute -ml-2.5 -mt-[3px] h-[7px] w-5 rounded-full bg-[rgba(22,33,28,.35)]" />
-        <div className="absolute -ml-6 -mt-[62px] flex h-12 w-12 items-center justify-center">
-          <div className="flex h-11 w-11 -rotate-45 items-center justify-center rounded-[50%_50%_50%_0] border-[3px] border-white bg-primary shadow-[0_6px_14px_rgba(22,33,28,.4)]">
+        <div className="absolute -ml-[3.75rem] -mt-[3.75rem] h-[7.5rem] w-[7.5rem] rounded-full border-[0.0938rem] border-[rgba(0,168,107,.4)] bg-[rgba(0,168,107,.12)]" />
+        <div className="absolute -ml-2.5 -mt-[0.1875rem] h-[0.4375rem] w-5 rounded-full bg-[rgba(22,33,28,.35)]" />
+        <div className="absolute -ml-6 -mt-[3.875rem] flex h-12 w-12 items-center justify-center">
+          <div className="flex h-11 w-11 -rotate-45 items-center justify-center rounded-[50%_50%_50%_0] border-[0.1875rem] border-white bg-primary shadow-[0_6px_14px_rgba(22,33,28,.4)]">
             <div className="h-3 w-3 rounded-full bg-accent" />
           </div>
         </div>
@@ -176,9 +176,9 @@ export function StepLocation({
       <button
         type="button"
         onClick={toMyLocation}
-        className="absolute bottom-9 right-4 z-[600] flex h-[52px] items-center gap-2 rounded-full bg-surface pl-3.5 pr-[18px] text-[15px] font-bold text-primary-ink shadow-float dark:border dark:border-line"
+        className="absolute bottom-9 right-4 z-[600] flex h-[3.25rem] items-center gap-2 rounded-full bg-surface pl-3.5 pr-[1.125rem] text-[0.9375rem] font-bold text-primary-ink shadow-float dark:border dark:border-line"
       >
-        <span className="h-[22px] w-[22px]">
+        <span className="h-[1.375rem] w-[1.375rem]">
           <Icon name="locate" />
         </span>
         {status === "locating" ? "Axtarılır…" : "Mənim yerim"}
@@ -187,15 +187,15 @@ export function StepLocation({
 
       <div
         className="relative z-[650] flex-none rounded-t-3xl bg-surface px-4 pt-5 shadow-sheet dark:border-t dark:border-line"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 104px)" }}
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 6.5rem)" }}
       >
-        <div className="mx-auto max-w-[480px]">
+        <div className="mx-auto max-w-[30rem]">
           <div className="mb-2 text-xs font-semibold tracking-[.06em] text-muted">
             ÜNVAN · {place?.addressEdited ? "ƏL İLƏ" : place?.source === "gps" ? "AVTOMATİK" : "XƏRİTƏDƏN"}
           </div>
           <div className="flex items-start gap-3">
             <span className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-primary-soft text-primary-ink">
-              <span className="h-[22px] w-[22px]">
+              <span className="h-[1.375rem] w-[1.375rem]">
                 <Icon name="pin" />
               </span>
             </span>
@@ -226,7 +226,7 @@ export function StepLocation({
                   if (place?.addressEdited) void searchTyped();
                   e.currentTarget.blur();
                 }}
-                className="block w-full rounded-xl border-2 border-line bg-surface py-2 pl-3 pr-12 text-[17px] font-bold text-ink outline-none placeholder:text-[15px] placeholder:font-semibold placeholder:text-subtle focus:border-primary"
+                className="block w-full rounded-xl border-2 border-line bg-surface py-2 pl-3 pr-12 text-[1.0625rem] font-bold text-ink outline-none placeholder:text-[0.9375rem] placeholder:font-semibold placeholder:text-subtle focus:border-primary"
               />
               <button
                 type="button"
@@ -237,7 +237,7 @@ export function StepLocation({
                 className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-primary-ink disabled:text-subtle"
               >
                 {searching ? (
-                  <span className="h-5 w-5 animate-spin rounded-full border-[2.5px] border-line border-t-primary" />
+                  <span className="h-5 w-5 animate-spin rounded-full border-[0.1563rem] border-line border-t-primary" />
                 ) : (
                   <span className="h-5 w-5">
                     <Icon name="search" />
@@ -246,7 +246,7 @@ export function StepLocation({
               </button>
               </div>
               {hits && (
-                <ul className="mt-2 max-h-[184px] overflow-y-auto rounded-xl border border-line" role="listbox" aria-label="Tapılan ünvanlar">
+                <ul className="mt-2 max-h-[11.5rem] overflow-y-auto rounded-xl border border-line" role="listbox" aria-label="Tapılan ünvanlar">
                   {hits.map((h, i) => (
                     <li key={`${h.lat},${h.lng},${i}`} className={i ? "border-t border-line-soft" : ""}>
                       <button
@@ -260,8 +260,8 @@ export function StepLocation({
                           <Icon name="pin" />
                         </span>
                         <span className="min-w-0">
-                          <span className="block truncate text-[15px] font-semibold">{h.label}</span>
-                          {h.locality && <span className="block truncate text-[13px] text-muted">{h.locality}</span>}
+                          <span className="block truncate text-[0.9375rem] font-semibold">{h.label}</span>
+                          {h.locality && <span className="block truncate text-[0.8125rem] text-muted">{h.locality}</span>}
                         </span>
                       </button>
                     </li>
@@ -282,17 +282,17 @@ export function StepLocation({
               </div>
               {place?.source === "gps" && place.accuracy != null && place.accuracy > 150 ? (
                 // Zəif dəqiqlik (məs. Wi-Fi/IP üzrə yer) — istifadəçi pini özü dəqiqləşdirməlidir
-                <div className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-accent-badge-fg">
+                <div className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-semibold text-accent-badge-fg">
                   <span className="h-2 w-2 rounded-full bg-accent" />
                   Təxmini yer (±{place.accuracy >= 1000 ? `${Math.round(place.accuracy / 1000)} km` : `${Math.round(place.accuracy)} m`}) — xəritədə dəqiqləşdirin
                 </div>
               ) : place?.source === "gps" && place.accuracy != null ? (
-                <div className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-success">
+                <div className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-semibold text-success">
                   <span className="h-2 w-2 rounded-full bg-success" />
                   GPS · ±{Math.round(place.accuracy)} m dəqiqlik
                 </div>
               ) : place ? (
-                <div className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-muted">
+                <div className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-semibold text-muted">
                   <span className="h-2 w-2 rounded-full bg-subtle" />
                   Xəritədə seçildi
                 </div>

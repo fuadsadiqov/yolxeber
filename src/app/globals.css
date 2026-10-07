@@ -119,6 +119,12 @@
   --shadow-fab: var(--shadow-fab);
 }
 
+/* Bütün UI ölçüləri rem-dədir — kök şrift 85% (≈13.6px): düymələr və mətnlər dizayndan 15% kiçik.
+   Xəritə pinləri (.yx-pin) bilərəkdən px-də qalır. */
+html {
+  font-size: 85%;
+}
+
 html,
 body {
   background: var(--bg);
@@ -129,7 +135,7 @@ body {
 
 /* Alt tab bar + iPhone "home indicator" sahəsi */
 .pb-tabbar {
-  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
 }
 
 /* ─── Xəritə (Leaflet) ─────────────────────────────────────────── */

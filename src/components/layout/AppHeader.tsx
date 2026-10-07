@@ -9,12 +9,12 @@ export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
   const lg = size === "lg";
   return (
     <span className="flex items-center gap-2.5">
-      <span className={`flex items-center justify-center ${lg ? "h-10 w-10" : "h-[30px] w-[30px]"}`}>
+      <span className={`flex items-center justify-center ${lg ? "h-10 w-10" : "h-[1.875rem] w-[1.875rem]"}`}>
         <span
-          className={`rotate-45 bg-accent outline-ink ${lg ? "h-7 w-7 rounded border-4 outline-[3px]" : "h-5 w-5 rounded-[3px] border-[3px] outline-2"} border-white outline`}
+          className={`rotate-45 bg-accent outline-ink ${lg ? "h-7 w-7 rounded border-4 outline-[0.1875rem]" : "h-5 w-5 rounded-[0.1875rem] border-[0.1875rem] outline-2"} border-white outline`}
         />
       </span>
-      <span className={`font-bold tracking-tight ${lg ? "text-[40px]" : "text-[21px]"}`}>YolXəbər</span>
+      <span className={`font-bold tracking-tight ${lg ? "text-[2.5rem]" : "text-[1.3125rem]"}`}>YolXəbər</span>
     </span>
   );
 }
@@ -29,12 +29,12 @@ const NAV = [
 export function AppHeader() {
   const path = usePathname();
   return (
-    <header className="hidden h-[68px] flex-none items-center gap-6 border-b border-line bg-surface px-6 md:flex">
-      <Link href="/" className="w-[392px]" aria-label="YolXəbər — ana səhifə">
+    <header className="hidden h-[4.25rem] flex-none items-center gap-6 border-b border-line bg-surface px-6 md:flex">
+      <Link href="/" className="w-[24.5rem]" aria-label="YolXəbər — ana səhifə">
         <Logo />
       </Link>
       <div className="flex-1" />
-      <nav className="flex gap-1 text-[15px] font-semibold">
+      <nav className="flex gap-1 text-[0.9375rem] font-semibold">
         {NAV.map((n) => {
           const on = n.href === "/" ? path === "/" : path.startsWith(n.href);
           return (
@@ -52,7 +52,7 @@ export function AppHeader() {
       <ThemeToggle className="shadow-none" />
       <Link
         href="/bildir"
-        className="flex h-[46px] items-center gap-1.5 rounded-full bg-accent pl-3.5 pr-5 text-[15px] font-bold text-accent-ink"
+        className="flex h-[2.875rem] items-center gap-1.5 rounded-full bg-accent pl-3.5 pr-5 text-[0.9375rem] font-bold text-accent-ink"
       >
         <span className="h-5 w-5">
           <Icon name="plus" />

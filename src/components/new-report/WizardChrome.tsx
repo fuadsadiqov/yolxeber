@@ -12,8 +12,8 @@ export function WizardHeader({ step, leftIcon, onLeft, leftLabel }: { step: 1 | 
             <Icon name={leftIcon} />
           </span>
         </button>
-        <h1 className="text-[17px] font-bold">Yeni bildiriş</h1>
-        <div className="w-12 text-right text-[15px] font-semibold text-primary-ink" aria-label={`Addım ${step}, cəmi 3`}>
+        <h1 className="text-[1.0625rem] font-bold">Yeni bildiriş</h1>
+        <div className="w-12 text-right text-[0.9375rem] font-semibold text-primary-ink" aria-label={`Addım ${step}, cəmi 3`}>
           {step}/3
         </div>
       </div>
@@ -38,9 +38,9 @@ export function BottomBar({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="fixed inset-x-0 bottom-0 z-[800] border-t border-line bg-surface px-4 pt-3"
-      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
     >
-      <div className="mx-auto flex max-w-[480px] gap-2.5">{children}</div>
+      <div className="mx-auto flex max-w-[30rem] gap-2.5">{children}</div>
     </div>
   );
 }
@@ -61,7 +61,7 @@ export function PrimaryButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-primary text-[17px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`flex h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-primary text-[1.0625rem] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       {children}
     </button>
@@ -73,7 +73,7 @@ export function SecondaryButton({ children, onClick, className = "" }: { childre
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-14 items-center justify-center rounded-2xl border-[1.5px] border-line-strong text-base font-semibold text-ink ${className}`}
+      className={`flex h-14 items-center justify-center rounded-2xl border-[0.0938rem] border-line-strong text-base font-semibold text-ink ${className}`}
     >
       {children}
     </button>

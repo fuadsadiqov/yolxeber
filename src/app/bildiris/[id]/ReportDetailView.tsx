@@ -89,9 +89,9 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
   const total = r.confirmCount + r.outdatedCount;
 
   return (
-    <main className="mx-auto min-h-dvh max-w-[600px] bg-bg pb-6 md:my-6 md:overflow-hidden md:rounded-[28px]">
+    <main className="mx-auto min-h-dvh max-w-[37.5rem] bg-bg pb-6 md:my-6 md:overflow-hidden md:rounded-[1.75rem]">
       {/* Media karuseli */}
-      <div className="relative h-[320px] md:h-[380px]" style={{ background: STRIPES }}>
+      <div className="relative h-[20rem] md:h-[23.75rem]" style={{ background: STRIPES }}>
         {r.media.length > 0 && (
           <div
             className="no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto"
@@ -129,7 +129,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             ))}
           </div>
         )}
-        <div className="absolute inset-x-4 flex justify-between" style={{ top: "calc(env(safe-area-inset-top) + 8px)" }}>
+        <div className="absolute inset-x-4 flex justify-between" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
           <RoundButton icon="chevL" label="Geri" onClick={back} />
           <RoundButton icon="share" label="Paylaş" onClick={share} />
         </div>
@@ -142,7 +142,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
 
       <div className="flex flex-col gap-4 px-4 pb-2 pt-5">
         {r.status === "outdated" && (
-          <div className="flex items-center gap-3 rounded-[14px] bg-line-soft px-3.5 py-3 text-muted">
+          <div className="flex items-center gap-3 rounded-[0.875rem] bg-line-soft px-3.5 py-3 text-muted">
             <span className="h-5 w-5 flex-none">
               <Icon name="ban" />
             </span>
@@ -153,17 +153,17 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         <div className="flex flex-col gap-2.5">
           <div className="flex flex-wrap gap-2">
             <span
-              className="flex h-[30px] items-center gap-1.5 rounded-full pl-1.5 pr-3 text-[13px] font-semibold"
+              className="flex h-[1.875rem] items-center gap-1.5 rounded-full pl-1.5 pr-3 text-[0.8125rem] font-semibold"
               style={{ background: cat.color, color: cat.fg }}
             >
-              <span className="h-[18px] w-[18px]">
+              <span className="h-[1.125rem] w-[1.125rem]">
                 <Icon name={cat.icon} />
               </span>
               {cat.name}
             </span>
             <StatusBadge status={r.status} size="md" />
           </div>
-          <h1 className="text-[26px] leading-tight font-bold text-balance">{r.title}</h1>
+          <h1 className="text-[1.625rem] leading-tight font-bold text-balance">{r.title}</h1>
           <div className="flex items-center gap-2 text-sm text-muted">
             <span className="h-4 w-4">
               <Icon name="clock" />
@@ -175,7 +175,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         </div>
 
         {/* Ünvan + mini xəritə */}
-        <div className="overflow-hidden rounded-[18px] bg-surface">
+        <div className="overflow-hidden rounded-[1.125rem] bg-surface">
           <div className="flex items-center gap-3 px-3.5 py-3">
             <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-soft text-primary-ink">
               <span className="h-5 w-5">
@@ -184,16 +184,16 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             </span>
             <div className="min-w-0 flex-1">
               <div className="truncate text-base font-semibold">{r.address ?? `${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}`}</div>
-              <div className="truncate text-[13px] text-muted">
+              <div className="truncate text-[0.8125rem] text-muted">
                 {[r.locality, dist != null ? formatDistance(dist) : null].filter(Boolean).join(" · ")}
               </div>
             </div>
           </div>
-          <div className="relative h-[150px] overflow-hidden">
+          <div className="relative h-[9.375rem] overflow-hidden">
             <MapCanvas center={r} zoom={16} interactive={false} pin={pin} />
             <Link
               href={`/?${new URLSearchParams({ r: r.id, lat: String(r.lat), lng: String(r.lng) })}`}
-              className="absolute bottom-2.5 right-2.5 z-[600] flex h-9 items-center rounded-full bg-surface px-3 text-[13px] font-bold text-primary-ink shadow-[0_2px_6px_rgba(22,33,28,.18)]"
+              className="absolute bottom-2.5 right-2.5 z-[600] flex h-9 items-center rounded-full bg-surface px-3 text-[0.8125rem] font-bold text-primary-ink shadow-[0_2px_6px_rgba(22,33,28,.18)]"
             >
               Xəritədə aç
             </Link>
@@ -204,17 +204,17 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
 
         {r.note && (
           <section>
-            <h2 className="mb-1.5 text-[13px] font-semibold tracking-[.06em] text-muted">QEYD</h2>
+            <h2 className="mb-1.5 text-[0.8125rem] font-semibold tracking-[.06em] text-muted">QEYD</h2>
             <p className="text-base leading-normal whitespace-pre-line text-pretty">{r.note}</p>
           </section>
         )}
 
         {/* Səsvermə */}
-        <section className="flex flex-col gap-3 rounded-[18px] bg-surface p-4" aria-label="Təsdiqləmə">
+        <section className="flex flex-col gap-3 rounded-[1.125rem] bg-surface p-4" aria-label="Təsdiqləmə">
           <div className="flex items-baseline gap-2">
             <span className="text-4xl leading-none font-bold text-success">{r.confirmCount}</span>
-            <span className="text-[15px] font-semibold">sürücü təsdiqləyib</span>
-            <span className="ml-auto text-[13px] text-muted">{r.outdatedCount} aktual deyil</span>
+            <span className="text-[0.9375rem] font-semibold">sürücü təsdiqləyib</span>
+            <span className="ml-auto text-[0.8125rem] text-muted">{r.outdatedCount} aktual deyil</span>
           </div>
           <div className="flex h-2 gap-0.5 overflow-hidden rounded" aria-hidden="true">
             {total === 0 ? (
@@ -238,7 +238,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
                 disabled={!!r.myVote || busy != null}
                 className="flex h-14 items-center justify-center gap-2.5 rounded-2xl bg-primary text-base font-bold text-white disabled:opacity-55"
               >
-                <span className="h-[22px] w-[22px]">
+                <span className="h-[1.375rem] w-[1.375rem]">
                   <Icon name={r.myVote === "confirm" ? "check" : "thumb"} />
                 </span>
                 {r.myVote === "confirm" ? "Siz təsdiqlədiniz" : busy === "confirm" ? "Göndərilir…" : "Təsdiqləyirəm, mən də gördüm"}
@@ -247,7 +247,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
                 type="button"
                 onClick={() => vote("outdated")}
                 disabled={!!r.myVote || busy != null}
-                className="flex h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-line-strong text-[15px] font-semibold text-ink disabled:opacity-55"
+                className="flex h-[3.25rem] items-center justify-center gap-2 rounded-2xl border-[0.0938rem] border-line-strong text-[0.9375rem] font-semibold text-ink disabled:opacity-55"
               >
                 <span className="h-5 w-5">
                   <Icon name="ban" />
@@ -260,7 +260,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
 
         {/* Paylaş */}
         <section>
-          <h2 className="mb-2 text-[13px] font-semibold tracking-[.06em] text-muted">PAYLAŞ</h2>
+          <h2 className="mb-2 text-[0.8125rem] font-semibold tracking-[.06em] text-muted">PAYLAŞ</h2>
           <div className="grid grid-cols-3 gap-2">
             <ShareLink href={`https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`} icon="chat" color="#1DA851" label="WhatsApp" />
             <ShareLink
@@ -272,7 +272,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             <button
               type="button"
               onClick={copyLink}
-              className="flex h-[52px] items-center justify-center gap-1.5 rounded-[14px] border border-line bg-surface text-sm font-semibold"
+              className="flex h-[3.25rem] items-center justify-center gap-1.5 rounded-[0.875rem] border border-line bg-surface text-sm font-semibold"
             >
               <span className="h-5 w-5 text-primary-ink">
                 <Icon name="link" />
@@ -287,9 +287,9 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             type="button"
             onClick={() => setFlagOpen(true)}
             disabled={r.myFlagged}
-            className="flex min-h-[52px] items-center justify-center gap-2 text-[15px] font-semibold text-danger-ink disabled:text-muted dark:text-danger-soft-ink"
+            className="flex min-h-[3.25rem] items-center justify-center gap-2 text-[0.9375rem] font-semibold text-danger-ink disabled:text-muted dark:text-danger-soft-ink"
           >
-            <span className="h-[18px] w-[18px]">
+            <span className="h-[1.125rem] w-[1.125rem]">
               <Icon name="flag" />
             </span>
             {r.myFlagged ? "Şikayətiniz qəbul edilib" : "Səhv məlumat / şikayət et"}
@@ -342,7 +342,7 @@ function NavigateSection({ lat, lng, title }: { lat: number; lng: number; title:
 
   return (
     <section aria-label="Xəritə tətbiqində aç">
-      <h2 className="mb-2 text-[13px] font-semibold tracking-[.06em] text-muted">XƏRİTƏ TƏTBİQİNDƏ AÇ</h2>
+      <h2 className="mb-2 text-[0.8125rem] font-semibold tracking-[.06em] text-muted">XƏRİTƏ TƏTBİQİNDƏ AÇ</h2>
       <div className="grid grid-cols-2 gap-2">
         {apps.map((a) => (
           <a
@@ -350,7 +350,7 @@ function NavigateSection({ lat, lng, title }: { lat: number; lng: number; title:
             href={a.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-[52px] items-center justify-center gap-2 rounded-[14px] border border-line bg-surface px-2 text-sm font-semibold"
+            className="flex h-[3.25rem] items-center justify-center gap-2 rounded-[0.875rem] border border-line bg-surface px-2 text-sm font-semibold"
           >
             <span className="h-5 w-5 flex-none" style={{ color: a.color }}>
               <Icon name={a.icon} />
@@ -362,7 +362,7 @@ function NavigateSection({ lat, lng, title }: { lat: number; lng: number; title:
           // Android: sistem seçim pəncərəsi — quraşdırılmış istənilən xəritə tətbiqi
           <a
             href={`geo:${ll}?q=${ll}(${q})`}
-            className="col-span-2 flex h-[52px] items-center justify-center gap-2 rounded-[14px] border border-line bg-surface text-sm font-semibold"
+            className="col-span-2 flex h-[3.25rem] items-center justify-center gap-2 rounded-[0.875rem] border border-line bg-surface text-sm font-semibold"
           >
             <span className="h-5 w-5 text-primary-ink">
               <Icon name="share" />
@@ -374,7 +374,7 @@ function NavigateSection({ lat, lng, title }: { lat: number; lng: number; title:
       <button
         type="button"
         onClick={copy}
-        className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[14px] text-sm font-semibold text-muted"
+        className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[0.875rem] text-sm font-semibold text-muted"
       >
         <span className="h-4 w-4">
           <Icon name="copy" />
@@ -393,7 +393,7 @@ function RoundButton({ icon, label, onClick }: { icon: IconName; label: string; 
       aria-label={label}
       className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-[#16211C] shadow-[0_2px_8px_rgba(22,33,28,.18)]"
     >
-      <span className="h-[22px] w-[22px]">
+      <span className="h-[1.375rem] w-[1.375rem]">
         <Icon name={icon} />
       </span>
     </button>
@@ -406,7 +406,7 @@ function ShareLink({ href, icon, color, label }: { href: string; icon: IconName;
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-[52px] items-center justify-center gap-1.5 rounded-[14px] border border-line bg-surface text-sm font-semibold"
+      className="flex h-[3.25rem] items-center justify-center gap-1.5 rounded-[0.875rem] border border-line bg-surface text-sm font-semibold"
     >
       <span className="h-5 w-5" style={{ color }}>
         <Icon name={icon} />
@@ -445,7 +445,7 @@ function FlagSheet({ open, onClose, reportId, onDone }: { open: boolean; onClose
         {FLAG_REASONS.map((o) => (
           <label
             key={o.value}
-            className={`flex min-h-[52px] cursor-pointer items-center gap-3 rounded-[14px] border-2 px-3.5 text-[15px] font-medium ${
+            className={`flex min-h-[3.25rem] cursor-pointer items-center gap-3 rounded-[0.875rem] border-2 px-3.5 text-[0.9375rem] font-medium ${
               reason === o.value ? "border-primary bg-primary-soft" : "border-line"
             }`}
           >
@@ -460,7 +460,7 @@ function FlagSheet({ open, onClose, reportId, onDone }: { open: boolean; onClose
         placeholder="Əlavə izah (istəyə bağlı)"
         rows={3}
         aria-label="Əlavə izah"
-        className="mt-3 block w-full resize-none rounded-2xl border-2 border-line bg-surface px-3.5 py-3 text-[15px] outline-none placeholder:text-subtle focus:border-primary"
+        className="mt-3 block w-full resize-none rounded-2xl border-2 border-line bg-surface px-3.5 py-3 text-[0.9375rem] outline-none placeholder:text-subtle focus:border-primary"
       />
       {error && <p className="mt-2 text-sm font-semibold text-danger-ink">{error}</p>}
       <button

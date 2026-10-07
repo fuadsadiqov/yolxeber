@@ -31,10 +31,10 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative max-h-[90dvh] w-full max-w-[480px] overflow-y-auto rounded-t-3xl bg-surface px-4 pt-2.5 outline-none md:rounded-3xl md:pb-4"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
+        className="relative max-h-[90dvh] w-full max-w-[30rem] overflow-y-auto rounded-t-3xl bg-surface px-4 pt-2.5 outline-none md:rounded-3xl md:pb-4"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
       >
-        <div className="mx-auto mb-3 h-[5px] w-10 rounded-full bg-line-strong md:hidden" />
+        <div className="mx-auto mb-3 h-[0.3125rem] w-10 rounded-full bg-line-strong md:hidden" />
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-bold">{title}</h2>
           <button type="button" onClick={onClose} aria-label="Bağla" className="-mr-2 flex h-11 w-11 items-center justify-center text-muted">

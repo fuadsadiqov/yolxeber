@@ -20,7 +20,7 @@ export function ReportCard({
   const body = (
     <>
       <div
-        className="relative h-[92px] w-[92px] flex-none overflow-hidden rounded-xl md:h-[84px] md:w-[84px]"
+        className="relative h-[5.75rem] w-[5.75rem] flex-none overflow-hidden rounded-xl md:h-[5.25rem] md:w-[5.25rem]"
         style={{ background: STRIPES }}
       >
         {r.thumbUrl && (
@@ -35,17 +35,17 @@ export function ReportCard({
           </span>
         )}
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
+      <div className="flex min-w-0 flex-1 flex-col gap-[0.1875rem]">
         <div className="flex min-h-5 items-center gap-1.5">
           <CategoryLabel category={r.category} />
           <StatusBadge status={r.status} />
         </div>
-        <div className="truncate text-[15px] font-semibold text-ink">{r.title}</div>
-        <div className="truncate text-[13px] text-muted">{[r.address, r.locality].filter(Boolean).join(", ") || "Ünvan təyin olunmayıb"}</div>
+        <div className="truncate text-[0.9375rem] font-semibold text-ink">{r.title}</div>
+        <div className="truncate text-[0.8125rem] text-muted">{[r.address, r.locality].filter(Boolean).join(", ") || "Ünvan təyin olunmayıb"}</div>
         <div className="mt-auto flex items-center gap-2.5 text-xs text-muted">
           {r.distanceM != null && <span className="font-bold text-ink">{formatDistance(r.distanceM)}</span>}
           <span>{relativeTime(r.createdAt)}</span>
-          <span className="ml-auto flex items-center gap-[3px]" aria-label={`${r.confirmCount} təsdiq`}>
+          <span className="ml-auto flex items-center gap-[0.1875rem]" aria-label={`${r.confirmCount} təsdiq`}>
             <span className="h-3.5 w-3.5">
               <Icon name="thumb" />
             </span>
@@ -56,7 +56,7 @@ export function ReportCard({
     </>
   );
 
-  const cls = `flex gap-3 rounded-2xl border-[1.5px] bg-surface p-2.5 text-left ${
+  const cls = `flex gap-3 rounded-2xl border-[0.0938rem] bg-surface p-2.5 text-left ${
     selected ? "border-primary" : "border-transparent"
   }`;
   if (onClick)
@@ -78,8 +78,8 @@ export function NearbyRow({ r, onClick }: { r: Card; onClick?: (r: Card) => void
     <>
       <CategoryIcon category={r.category} />
       <div className="min-w-0 flex-1 text-left">
-        <div className="truncate text-[15px] font-semibold text-ink">{r.title}</div>
-        <div className="truncate text-[13px] text-muted">{[r.address, r.locality].filter(Boolean).join(", ")}</div>
+        <div className="truncate text-[0.9375rem] font-semibold text-ink">{r.title}</div>
+        <div className="truncate text-[0.8125rem] text-muted">{[r.address, r.locality].filter(Boolean).join(", ")}</div>
       </div>
       <div className="flex-none text-right">
         <div className="text-sm font-semibold text-ink">{formatDistance(r.distanceM)}</div>
@@ -87,7 +87,7 @@ export function NearbyRow({ r, onClick }: { r: Card; onClick?: (r: Card) => void
       </div>
     </>
   );
-  const cls = "flex min-h-[72px] w-full items-center gap-3 border-t border-line-soft";
+  const cls = "flex min-h-[4.5rem] w-full items-center gap-3 border-t border-line-soft";
   return onClick ? (
     <button type="button" className={cls} onClick={() => onClick(r)}>
       {inner}
@@ -101,9 +101,9 @@ export function NearbyRow({ r, onClick }: { r: Card; onClick?: (r: Card) => void
 
 export function CardSkeleton() {
   return (
-    <div className="flex gap-3 rounded-[18px] bg-surface p-2.5" aria-hidden="true">
-      <div className="h-[92px] w-[92px] flex-none rounded-xl bg-skeleton" />
-      <div className="flex flex-1 flex-col gap-[9px] pt-1">
+    <div className="flex gap-3 rounded-[1.125rem] bg-surface p-2.5" aria-hidden="true">
+      <div className="h-[5.75rem] w-[5.75rem] flex-none rounded-xl bg-skeleton" />
+      <div className="flex flex-1 flex-col gap-[0.5625rem] pt-1">
         <div className="h-3 w-2/5 rounded-md bg-skeleton" />
         <div className="h-4 w-[85%] rounded-md bg-surface-muted" />
         <div className="h-3 w-[65%] rounded-md bg-skeleton" />

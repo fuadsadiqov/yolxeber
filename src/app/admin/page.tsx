@@ -44,7 +44,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             key={t.key}
             href={`/admin?tab=${t.key}`}
             aria-current={tab === t.key ? "page" : undefined}
-            className={`flex h-10 flex-none items-center gap-2 rounded-[9px] px-3.5 text-sm whitespace-nowrap ${
+            className={`flex h-10 flex-none items-center gap-2 rounded-[0.5625rem] px-3.5 text-sm whitespace-nowrap ${
               tab === t.key ? "bg-surface font-bold shadow-[0_1px_3px_rgba(22,33,28,.12)]" : "font-semibold text-muted"
             }`}
           >
@@ -74,7 +74,7 @@ async function Blocked() {
     <div key={d.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-surface p-4">
       <div className="min-w-0 flex-1">
         <div className="font-mono text-sm">{d.id}</div>
-        <div className="text-[13px] text-muted">
+        <div className="text-[0.8125rem] text-muted">
           {d.blocked_at.toLocaleString("az-AZ")} · {d.reports} bildiriş{d.block_reason ? ` · ${d.block_reason}` : ""}
         </div>
       </div>

@@ -61,12 +61,12 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
   return (
     <div
       onClick={openDetail}
-      className={`absolute inset-x-3 z-[700] overflow-hidden rounded-[18px] bg-surface shadow-[0_12px_32px_rgba(22,33,28,.25)] md:left-5 md:right-auto md:top-5 md:w-[300px] dark:border dark:border-line ${r ? "cursor-pointer" : ""}`}
-      style={{ top: "calc(env(safe-area-inset-top) + 64px)" }}
+      className={`absolute inset-x-3 z-[700] overflow-hidden rounded-[1.125rem] bg-surface shadow-[0_12px_32px_rgba(22,33,28,.25)] md:left-5 md:right-auto md:top-5 md:w-[18.75rem] dark:border dark:border-line ${r ? "cursor-pointer" : ""}`}
+      style={{ top: "calc(env(safe-area-inset-top) + 4rem)" }}
       role="dialog"
       aria-label={r?.title ?? "Bildiriş"}
     >
-      <div className="relative h-[130px]" style={{ background: STRIPES }}>
+      <div className="relative h-[8.125rem]" style={{ background: STRIPES }}>
         {cover && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={cover.thumbUrl ?? cover.url} alt="" className="h-full w-full object-cover" />
@@ -77,7 +77,7 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
           aria-label="Bağla"
           className="absolute right-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#16211C]"
         >
-          <span className="h-[18px] w-[18px]">
+          <span className="h-[1.125rem] w-[1.125rem]">
             <Icon name="x" />
           </span>
         </button>
@@ -97,13 +97,13 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
               <CategoryLabel category={r.category} />
               <StatusBadge status={r.status} />
             </div>
-            <div className="text-[17px] font-bold leading-snug">{r.title}</div>
-            <div className="text-[13px] text-muted">
+            <div className="text-[1.0625rem] font-bold leading-snug">{r.title}</div>
+            <div className="text-[0.8125rem] text-muted">
               {[r.address, relativeTime(r.createdAt), `${r.confirmCount} təsdiq`].filter(Boolean).join(" · ")}
             </div>
             <div className="mt-1.5 flex gap-2">
               {r.isOwn ? (
-                <span className="flex h-11 flex-1 items-center justify-center rounded-xl bg-line-soft text-[13px] font-semibold text-muted">
+                <span className="flex h-11 flex-1 items-center justify-center rounded-xl bg-line-soft text-[0.8125rem] font-semibold text-muted">
                   Sizin bildirişiniz
                 </span>
               ) : (
@@ -113,7 +113,7 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
                   disabled={busy || !!r.myVote}
                   className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary text-sm font-bold text-white disabled:opacity-60"
                 >
-                  <span className="h-[18px] w-[18px]">
+                  <span className="h-[1.125rem] w-[1.125rem]">
                     <Icon name={r.myVote ? "check" : "thumb"} />
                   </span>
                   {r.myVote === "confirm" ? "Təsdiqlədiniz" : r.myVote ? "Səs verdiniz" : "Təsdiqləyirəm"}
@@ -121,7 +121,7 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
               )}
               <Link
                 href={`/bildiris/${r.id}`}
-                className="flex h-11 items-center rounded-xl border-[1.5px] border-line-strong px-3.5 text-sm font-semibold"
+                className="flex h-11 items-center rounded-xl border-[0.0938rem] border-line-strong px-3.5 text-sm font-semibold"
               >
                 Ətraflı
               </Link>

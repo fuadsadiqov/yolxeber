@@ -107,7 +107,7 @@ export function MediaViewer({
     <div className="fixed inset-0 z-[1600] flex flex-col bg-black text-white" role="dialog" aria-modal="true" aria-label={`${title} — şəkillər`}>
       <div
         className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-4 pb-6"
-        style={{ paddingTop: "calc(env(safe-area-inset-top) + 8px)", background: "linear-gradient(rgba(0,0,0,.55), transparent)" }}
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.5rem)", background: "linear-gradient(rgba(0,0,0,.55), transparent)" }}
       >
         <span className="text-sm font-semibold" aria-live="polite">
           {media.length > 1 ? `${index + 1} / ${media.length}` : ""}
@@ -181,7 +181,7 @@ export function MediaViewer({
       {current?.kind === "image" && (
         <p
           className="pointer-events-none absolute inset-x-0 bottom-0 text-center text-xs text-white/60"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)" }}
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.875rem)" }}
         >
           {zoomed ? "Kiçiltmək üçün iki dəfə toxunun" : "Böyütmək üçün iki dəfə toxunun"}
         </p>

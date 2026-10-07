@@ -81,10 +81,10 @@ export function StepMedia({ media, setMedia }: Props) {
 
   return (
     <div className="px-4 pt-5">
-      <h2 className="mb-1 text-[22px] font-bold">Nə gördünüz?</h2>
-      <p className="mb-4 text-[15px] text-muted">Nişan, kamera və ya xətt aydın görünsün.</p>
+      <h2 className="mb-1 text-[1.375rem] font-bold">Nə gördünüz?</h2>
+      <p className="mb-4 text-[0.9375rem] text-muted">Nişan, kamera və ya xətt aydın görünsün.</p>
 
-      <div className="relative h-[316px] overflow-hidden rounded-[20px]" style={{ background: STRIPES }}>
+      <div className="relative h-[19.75rem] overflow-hidden rounded-[1.25rem]" style={{ background: STRIPES }}>
         {current ? (
           current.kind === "image" ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -121,7 +121,7 @@ export function StepMedia({ media, setMedia }: Props) {
                 <Icon name="trash" />
               </span>
             </button>
-            <span className="absolute bottom-3 left-3 flex h-8 items-center gap-1.5 rounded-2xl bg-[rgba(22,33,28,.72)] px-3 text-[13px] font-semibold text-white">
+            <span className="absolute bottom-3 left-3 flex h-8 items-center gap-1.5 rounded-2xl bg-[rgba(22,33,28,.72)] px-3 text-[0.8125rem] font-semibold text-white">
               <span className="h-4 w-4">
                 <Icon name={current.kind === "video" ? "video" : "camera"} />
               </span>
@@ -134,7 +134,7 @@ export function StepMedia({ media, setMedia }: Props) {
               onClick={() => pick(current.kind === "video" ? videoIn : photoIn, media.indexOf(current))}
               className="absolute bottom-3 right-3 flex h-11 items-center gap-1.5 rounded-full bg-white px-4 text-sm font-semibold text-[#16211C]"
             >
-              <span className="h-[18px] w-[18px]">
+              <span className="h-[1.125rem] w-[1.125rem]">
                 <Icon name="refresh" />
               </span>
               Yenidən çək
@@ -152,7 +152,7 @@ export function StepMedia({ media, setMedia }: Props) {
               role="option"
               aria-selected={m === current}
               onClick={() => setActive(i)}
-              className={`relative h-[60px] w-[60px] overflow-hidden rounded-xl border-2 ${m === current ? "border-primary" : "border-transparent"}`}
+              className={`relative h-[3.75rem] w-[3.75rem] overflow-hidden rounded-xl border-2 ${m === current ? "border-primary" : "border-transparent"}`}
               style={{ background: STRIPES }}
             >
               {m.kind === "image" ? (
@@ -170,9 +170,9 @@ export function StepMedia({ media, setMedia }: Props) {
               type="button"
               onClick={() => pick(galleryIn)}
               aria-label="Daha çox əlavə et"
-              className="flex h-[60px] w-[60px] items-center justify-center rounded-xl border-2 border-dashed border-line-strong text-muted"
+              className="flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-xl border-2 border-dashed border-line-strong text-muted"
             >
-              <span className="h-[22px] w-[22px]">
+              <span className="h-[1.375rem] w-[1.375rem]">
                 <Icon name="plus" />
               </span>
             </button>
@@ -200,9 +200,9 @@ function SourceButton({ icon, label, onClick }: { icon: IconName; label: string;
     <button
       type="button"
       onClick={onClick}
-      className="flex h-[84px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-line bg-surface text-sm font-semibold text-primary-ink"
+      className="flex h-[5.25rem] flex-col items-center justify-center gap-1.5 rounded-2xl border border-line bg-surface text-sm font-semibold text-primary-ink"
     >
-      <span className="h-[26px] w-[26px]">
+      <span className="h-[1.625rem] w-[1.625rem]">
         <Icon name={icon} />
       </span>
       {label}

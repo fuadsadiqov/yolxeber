@@ -103,36 +103,36 @@ export function AlertsScreen() {
             <Icon name="chevL" />
           </span>
         </button>
-        <h1 className="text-[24px] font-bold md:text-[28px]">Xəbərdarlıqlar</h1>
+        <h1 className="text-[1.5rem] font-bold md:text-[1.75rem]">Xəbərdarlıqlar</h1>
       </header>
-      <p className="mb-4 text-[15px] leading-normal text-muted">
+      <p className="mb-4 text-[0.9375rem] leading-normal text-muted">
         Xəritədə ərazi seçin — orada yeni bildiriş paylaşılanda telefonunuza bildiriş gələcək.
       </p>
 
       <PushCard state={push} onEnable={turnOnPush} onDisable={async () => (await disablePush(), setPush("off"))} />
 
       <div className="mt-5 flex flex-col gap-2.5">
-        {zones === null && !failed && [1, 2].map((i) => <div key={i} className="h-[104px] rounded-[18px] bg-surface" />)}
+        {zones === null && !failed && [1, 2].map((i) => <div key={i} className="h-[6.5rem] rounded-[1.125rem] bg-surface" />)}
         {failed && (
           <button type="button" onClick={reload} className="h-12 font-semibold text-primary-ink">
             Yükləmək alınmadı — yenidən cəhd et
           </button>
         )}
         {zones?.length === 0 && (
-          <div className="flex flex-col items-center rounded-[18px] bg-surface px-6 py-8 text-center">
+          <div className="flex flex-col items-center rounded-[1.125rem] bg-surface px-6 py-8 text-center">
             <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft p-3.5 text-primary-ink">
               <Icon name="bell" />
             </span>
-            <div className="mb-1 text-[17px] font-bold">Hələ ərazi əlavə etməmisiniz</div>
+            <div className="mb-1 text-[1.0625rem] font-bold">Hələ ərazi əlavə etməmisiniz</div>
             <p className="text-sm text-muted">Məsələn, ev və iş yolunuzu əlavə edin.</p>
           </div>
         )}
         {zones?.map((z) => (
-          <article key={z.id} className="rounded-[18px] bg-surface p-4">
+          <article key={z.id} className="rounded-[1.125rem] bg-surface p-4">
             <div className="flex items-start gap-3">
               <button type="button" onClick={() => setEditing(z)} className="min-w-0 flex-1 text-left">
-                <div className="truncate text-[17px] font-bold">{z.name}</div>
-                <div className="text-[13px] text-muted">{formatDistance(z.radiusM)} radius · {z.categories.length} kateqoriya</div>
+                <div className="truncate text-[1.0625rem] font-bold">{z.name}</div>
+                <div className="text-[0.8125rem] text-muted">{formatDistance(z.radiusM)} radius · {z.categories.length} kateqoriya</div>
               </button>
               <Switch checked={z.enabled} onChange={(v) => toggleZone(z, v)} label={`${z.name} — aktiv`} />
             </div>
@@ -159,9 +159,9 @@ export function AlertsScreen() {
         <button
           type="button"
           onClick={() => setEditing({ name: zones.length === 0 ? "Ev" : `Ərazi ${zones.length + 1}`, lat: BAKU.lat, lng: BAKU.lng, radiusM: 2000, categories: DEFAULT_CATS, enabled: true })}
-          className="mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-[17px] font-bold text-white"
+          className="mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-[1.0625rem] font-bold text-white"
         >
-          <span className="h-[22px] w-[22px]">
+          <span className="h-[1.375rem] w-[1.375rem]">
             <Icon name="plus" />
           </span>
           Yeni ərazi əlavə et
@@ -172,15 +172,15 @@ export function AlertsScreen() {
 }
 
 function PushCard({ state, onEnable, onDisable }: { state: PushState | null; onEnable: () => void; onDisable: () => void }) {
-  if (!state) return <div className="h-[76px] rounded-[18px] bg-surface" />;
-  const box = "flex items-center gap-3 rounded-[18px] px-4 py-3.5";
+  if (!state) return <div className="h-[4.75rem] rounded-[1.125rem] bg-surface" />;
+  const box = "flex items-center gap-3 rounded-[1.125rem] px-4 py-3.5";
   if (state === "on")
     return (
       <div className={`${box} bg-success-soft text-success`}>
         <span className="h-6 w-6 flex-none">
           <Icon name="bell" />
         </span>
-        <span className="flex-1 text-[15px] font-semibold">Bildirişlər bu cihazda aktivdir</span>
+        <span className="flex-1 text-[0.9375rem] font-semibold">Bildirişlər bu cihazda aktivdir</span>
         <button type="button" onClick={onDisable} className="h-10 rounded-xl px-3 text-sm font-semibold text-muted">
           Söndür
         </button>
@@ -192,7 +192,7 @@ function PushCard({ state, onEnable, onDisable }: { state: PushState | null; onE
         <span className="h-6 w-6 flex-none">
           <Icon name="bell" />
         </span>
-        <span className="flex-1 text-[15px] font-semibold">Bildirişlər söndürülüb</span>
+        <span className="flex-1 text-[0.9375rem] font-semibold">Bildirişlər söndürülüb</span>
         <button type="button" onClick={onEnable} className="h-11 rounded-xl bg-accent px-4 text-sm font-bold text-accent-ink">
           Aktiv et
         </button>
@@ -254,14 +254,14 @@ function ZoneEditor({ draft, onCancel, onSaved }: { draft: Draft; onCancel: () =
             <Icon name="x" />
           </span>
         </button>
-        <h1 className="text-[17px] font-bold">{d.id ? "Ərazini dəyiş" : "Yeni ərazi"}</h1>
+        <h1 className="text-[1.0625rem] font-bold">{d.id ? "Ərazini dəyiş" : "Yeni ərazi"}</h1>
         <span className="w-12" />
       </header>
 
-      <div className="relative h-[42dvh] min-h-[260px] overflow-hidden">
+      <div className="relative h-[42dvh] min-h-[16.25rem] overflow-hidden">
         <MapCanvas ref={mapRef} center={initial} zoom={d.radiusM > 5000 ? 11 : 13} centerCircleM={d.radiusM} me={position} />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 z-[600] -ml-2 -mt-2 h-4 w-4 rounded-full border-[3px] border-white bg-primary shadow" />
-        <div className="pointer-events-none absolute left-1/2 top-3 z-[600] flex h-9 -translate-x-1/2 items-center whitespace-nowrap rounded-full bg-[#16211C] px-3.5 text-[13px] font-semibold text-white">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-[600] -ml-2 -mt-2 h-4 w-4 rounded-full border-[0.1875rem] border-white bg-primary shadow" />
+        <div className="pointer-events-none absolute left-1/2 top-3 z-[600] flex h-9 -translate-x-1/2 items-center whitespace-nowrap rounded-full bg-[#16211C] px-3.5 text-[0.8125rem] font-semibold text-white">
           Mərkəzi seçmək üçün xəritəni sürüşdürün
         </div>
         <button
@@ -271,7 +271,7 @@ function ZoneEditor({ draft, onCancel, onSaved }: { draft: Draft; onCancel: () =
             if (f) mapRef.current?.flyTo(f, 13);
           }}
           aria-label="Mənim yerim"
-          className="absolute bottom-3 right-3 z-[600] flex h-12 w-12 items-center justify-center rounded-[14px] bg-surface p-3 text-primary-ink shadow-float"
+          className="absolute bottom-3 right-3 z-[600] flex h-12 w-12 items-center justify-center rounded-[0.875rem] bg-surface p-3 text-primary-ink shadow-float"
         >
           <Icon name="locate" />
         </button>
@@ -279,7 +279,7 @@ function ZoneEditor({ draft, onCancel, onSaved }: { draft: Draft; onCancel: () =
 
       <div className="flex flex-col gap-5 px-4 pb-32 pt-5">
         <label className="flex flex-col gap-2">
-          <span className="text-[15px] font-bold">Ad</span>
+          <span className="text-[0.9375rem] font-bold">Ad</span>
           <input
             value={d.name}
             maxLength={60}
@@ -290,10 +290,10 @@ function ZoneEditor({ draft, onCancel, onSaved }: { draft: Draft; onCancel: () =
 
         <div>
           <div className="mb-2 flex items-baseline justify-between">
-            <label htmlFor="radius" className="text-[15px] font-bold">
+            <label htmlFor="radius" className="text-[0.9375rem] font-bold">
               Radius
             </label>
-            <span className="text-[15px] font-bold text-primary-ink">{formatDistance(d.radiusM)}</span>
+            <span className="text-[0.9375rem] font-bold text-primary-ink">{formatDistance(d.radiusM)}</span>
           </div>
           <input
             id="radius"
@@ -313,12 +313,12 @@ function ZoneEditor({ draft, onCancel, onSaved }: { draft: Draft; onCancel: () =
         </div>
 
         <div>
-          <div className="mb-2 text-[15px] font-bold">Kateqoriyalar</div>
-          <div className="overflow-hidden rounded-[18px] bg-surface">
+          <div className="mb-2 text-[0.9375rem] font-bold">Kateqoriyalar</div>
+          <div className="overflow-hidden rounded-[1.125rem] bg-surface">
             {CATEGORY_LIST.map((c, i) => (
-              <div key={c.key} className={`flex min-h-[60px] items-center gap-3 px-3.5 ${i ? "border-t border-line-soft" : ""}`}>
+              <div key={c.key} className={`flex min-h-[3.75rem] items-center gap-3 px-3.5 ${i ? "border-t border-line-soft" : ""}`}>
                 <CategoryIcon category={c.key} size={34} icon={18} radius={10} />
-                <span className="flex-1 text-[15px] font-semibold">{c.name}</span>
+                <span className="flex-1 text-[0.9375rem] font-semibold">{c.name}</span>
                 <Switch checked={d.categories.includes(c.key)} onChange={(v) => toggleCat(c.key, v)} label={CATEGORIES[c.key].name} />
               </div>
             ))}
@@ -328,13 +328,13 @@ function ZoneEditor({ draft, onCancel, onSaved }: { draft: Draft; onCancel: () =
 
       <div
         className="fixed inset-x-0 bottom-0 z-[800] border-t border-line bg-surface px-4 pt-3"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
       >
         <button
           type="button"
           onClick={save}
           disabled={saving || d.categories.length === 0}
-          className="mx-auto flex h-14 w-full max-w-2xl items-center justify-center gap-2 rounded-2xl bg-primary text-[17px] font-bold text-white disabled:opacity-50"
+          className="mx-auto flex h-14 w-full max-w-2xl items-center justify-center gap-2 rounded-2xl bg-primary text-[1.0625rem] font-bold text-white disabled:opacity-50"
         >
           {saving ? "Yadda saxlanılır…" : d.categories.length === 0 ? "Ən azı bir kateqoriya seçin" : "Yadda saxla"}
         </button>

@@ -25,7 +25,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       <div
         aria-live="polite"
         className="pointer-events-none fixed inset-x-3 z-[2000] flex justify-center md:bottom-6"
-        style={{ bottom: "calc(100px + env(safe-area-inset-bottom))" }}
+        style={{ bottom: "calc(6.25rem + env(safe-area-inset-bottom))" }}
       >
         {toast && (
           <div
@@ -38,7 +38,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 <Icon name={toast.icon} />
               </span>
             )}
-            <span className="min-h-[24px] flex-1 py-1 text-sm leading-snug">{toast.text}</span>
+            <span className="min-h-[1.5rem] flex-1 py-1 text-sm leading-snug">{toast.text}</span>
             {toast.action && (
               <button
                 type="button"

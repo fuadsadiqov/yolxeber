@@ -89,13 +89,13 @@ export function FeedList({
   }, [state, cursor, load]);
 
   const offlineBanner = offline && (
-    <div className="mb-3 flex items-center gap-3 rounded-[14px] bg-danger-soft px-3.5 py-3 text-danger-soft-ink">
-      <span className="h-[22px] w-[22px] flex-none">
+    <div className="mb-3 flex items-center gap-3 rounded-[0.875rem] bg-danger-soft px-3.5 py-3 text-danger-soft-ink">
+      <span className="h-[1.375rem] w-[1.375rem] flex-none">
         <Icon name="wifiOff" />
       </span>
       <div className="flex-1">
-        <div className="text-[15px] font-bold">İnternet bağlantısı yoxdur</div>
-        {lastOk && <div className="text-[13px] opacity-80">Son yenilənmə: {lastOkLabel(lastOk)}</div>}
+        <div className="text-[0.9375rem] font-bold">İnternet bağlantısı yoxdur</div>
+        {lastOk && <div className="text-[0.8125rem] opacity-80">Son yenilənmə: {lastOkLabel(lastOk)}</div>}
       </div>
     </div>
   );
@@ -115,13 +115,13 @@ export function FeedList({
       <div>
         {offlineBanner}
         <div className="flex flex-col items-center px-8 pt-16 text-center">
-          <span className="mb-5 flex h-[84px] w-[84px] items-center justify-center rounded-full bg-surface text-danger shadow-[0_0_0_10px_var(--danger-soft)]">
-            <span className="h-[38px] w-[38px]">
+          <span className="mb-5 flex h-[5.25rem] w-[5.25rem] items-center justify-center rounded-full bg-surface text-danger shadow-[0_0_0_10px_var(--danger-soft)]">
+            <span className="h-[2.375rem] w-[2.375rem]">
               <Icon name="wifiOff" />
             </span>
           </span>
-          <div className="mb-2 text-[21px] font-bold">Bildirişləri yükləmək alınmadı</div>
-          <p className="mb-[22px] text-[15px] leading-normal text-pretty text-muted">
+          <div className="mb-2 text-[1.3125rem] font-bold">Bildirişləri yükləmək alınmadı</div>
+          <p className="mb-[1.375rem] text-[0.9375rem] leading-normal text-pretty text-muted">
             Bağlantını yoxlayıb yenidən cəhd edin. Əvvəl baxdığınız bildirişlər oflayn qalır.
           </p>
           <button
@@ -141,13 +141,13 @@ export function FeedList({
   if (items.length === 0)
     return (
       <div className="flex flex-col items-center px-6 pt-14 text-center">
-        <span className="mb-4 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-primary-soft text-primary-ink">
-          <span className="h-[34px] w-[34px]">
+        <span className="mb-4 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-primary-soft text-primary-ink">
+          <span className="h-[2.125rem] w-[2.125rem]">
             <Icon name="pin" />
           </span>
         </span>
         <div className="mb-2 text-xl font-bold">{sort === "near" && !at ? "Yeriniz məlum deyil" : "Hələ bildiriş yoxdur"}</div>
-        <p className="text-[15px] leading-normal text-pretty text-muted">
+        <p className="text-[0.9375rem] leading-normal text-pretty text-muted">
           {sort === "near" && !at
             ? "Ən yaxın bildirişləri görmək üçün yer məlumatına icazə verin."
             : "Yeni nişan və ya kamera görsəniz, ilk bildirişi siz paylaşın."}

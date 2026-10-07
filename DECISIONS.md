@@ -4,6 +4,12 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — UI ölçüləri 15% kiçildildi
+
+- Bütün Tailwind `[Npx]` dəyərləri (279 ədəd) və inline `style` px ölçüləri (18 ədəd) rem-ə çevrildi (16px = 1rem). Kök şrift `html { font-size: 85% }` edildi. Nəticədə düymələr, mətnlər, ikonlar və aralarındakı boşluqlar dizayndan mütənasib olaraq 15% kiçikdir.
+- Gələcəkdə ölçünü dəyişmək üçün yalnız bu dəyəri dəyişmək kifayətdir.
+- Xəritə pinləri, klasterlər və kölgələr bilərəkdən px-də qaldı.
+
 ## 2026-10-07 — Yer addımının layout-u və xarici xəritələr
 
 - **Problem:** ünvan axtarışı/seçimindən sonra alt panel hündürləşirdi. "Mənim yerim" düyməsi sabit `bottom: 250px` mövqeyində olduğu üçün panelin altında qalırdı, nəticə siyahısı mərkəz pinini örtürdü. Problem 385×866 ölçüsündə təkrarlandı.
