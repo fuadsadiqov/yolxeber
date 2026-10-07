@@ -4,6 +4,21 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — Tam ekran şəkil və ünvan axtarışı
+
+- **Detal səhifəsində şəkilə toxunanda tam ekran baxış açılır** (`MediaViewer`):
+  - sürüşdürmə ilə keçid, sayğac;
+  - iki dəfə toxunma ilə 2.5x böyütmə;
+  - Esc, X və ya telefonun "geri" düyməsi ilə bağlanma (history yazısı ilə);
+  - masaüstündə oxlar.
+- **Yazılmış ünvanın xəritədə tapılması (forward geocoding):** `/api/geocode/search` Nominatim `/search` sorğusunu proksiləyir.
+  - Axtarış yalnız Azərbaycanla məhdudlaşır, xəritənin cari mərkəzinə üstünlük verilir.
+  - Nəticələr 24 saat yaddaşda keşlənir. Cihaz başına dəqiqədə 15 axtarış limiti var.
+  - Axtarış yalnız Enter və ya axtarış düyməsi ilə olur. Nominatim qaydaları hər hərfdə avtomatik tamamlamanı qadağan edir.
+  - 1 nəticə varsa pin dərhal ora keçir, bir neçə nəticə varsa siyahıdan seçilir.
+- **Nominatim User-Agent:** `example.com` olan User-Agent-ləri Nominatim 403 ilə bloklayır (yoxlanılıb). Default dəyər layihənin URL-i ilə dəyişdirildi, nümunə dəyər yazılıbsa avtomatik əvəzlənir, xəta olanda logda xəbərdarlıq çıxır. Bu, serverdə avtomatik ünvanın gəlməməsinin də səbəbi ola bilərdi.
+- Ünvan sahəsi artıq heç vaxt deaktiv olmur. Xəritə ilk mövqeyini dərhal (`whenReady`) bildirir.
+
 ## 2026-10-07 — Ünvanı əl ilə yazmaq
 
 - **Addım 2-də ünvan sahəsi redaktə olunur.** Nominatim ünvanı avtomatik doldurur, istifadəçi onu düzəldə və ya yenisini yaza bilər (maks. 120 simvol, məs. "Gənclik metrosunun yanı").

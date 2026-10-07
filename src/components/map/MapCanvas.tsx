@@ -110,7 +110,8 @@ export default function MapCanvas({
     const emit = () => cb.current.onViewChange?.(viewOf(map));
     map.on("moveend", emit);
     map.on("click", () => cb.current.onSelect?.(null));
-    // İlk görünüş: layout hesablandıqdan sonra
+    // İlk görünüş dərhal bildirilir (fon tabında rAF işləmir), layout hesablandıqdan sonra bir də
+    map.whenReady(emit);
     requestAnimationFrame(() => {
       map.invalidateSize();
       emit();

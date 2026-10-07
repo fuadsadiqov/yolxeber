@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { MapHandle, MapView } from "@/components/map/MapCanvas";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
-import { api, qs } from "@/lib/client/api";
+import { api, ApiError, qs } from "@/lib/client/api";
 import { BAKU, distanceM, useGeo } from "@/lib/client/geo";
 import type { LatLng } from "@/lib/types";
 
@@ -27,6 +27,8 @@ export type PickedPlace = LatLng & {
 
 export const ADDRESS_MAX = 120;
 
+type SearchHit = LatLng & { label: string; address: string | null; locality: string | null };
+
 /**
  * Addım 2 (dizayn 04): pin ekranın mərkəzində sabitdir, istifadəçi xəritəni altında sürüşdürür.
  * GPS-dən gələn mövqedən uzaqlaşdıqda mənbə "xəritədən" olur.
@@ -46,6 +48,8 @@ export function StepLocation({
   const centered = useRef(!!place);
   const geoTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const lastKey = useRef("");
+  const [searching, setSearching] = useState(false);
+  const [hits, setHits] = useState<SearchHit[] | null>(null);
 
   // Addıma ilk girişdə GPS-dən təzə mövqe istəyirik
   useEffect(() => {
@@ -108,6 +112,38 @@ export function StepLocation({
     }, 600);
   }
 
+  /**
+   * Yazılmış ünvandan yer tapır (forward geocoding) və pini ora aparır.
+   * Nominatim qaydasına görə avtomatik tamamlama yoxdur — yalnız Enter / axtarış düyməsi ilə.
+   */
+  async function searchTyped() {
+    const q = place?.address?.trim() ?? "";
+    if (q.length < 3 || searching) return;
+    setSearching(true);
+    setHits(null);
+    try {
+      const near = mapRef.current?.getCenter() ?? position ?? BAKU;
+      const { items } = await api<{ items: SearchHit[] }>(
+        `/api/geocode/search?${qs({ q, lat: near.lat.toFixed(3), lng: near.lng.toFixed(3) })}`,
+      );
+      if (items.length === 0) toast("Bu ünvan tapılmadı. Pini xəritədə özünüz yerləşdirin.", { icon: "pin" });
+      else if (items.length === 1) applyHit(items[0]);
+      else setHits(items);
+    } catch (e) {
+      toast(e instanceof ApiError && e.status === 429 ? "Çox sayda axtarış. Bir dəqiqə sonra yenidən cəhd edin." : "Axtarış alınmadı.");
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  function applyHit(h: SearchHit) {
+    setHits(null);
+    // Mətn seçilən nəticə ilə əvəzlənir; xəritə hərəkətindən sonra əl ilə yazılmış kimi qorunur
+    setPlace((p) => (p ? { ...p, address: h.label.slice(0, ADDRESS_MAX), locality: h.locality, addressEdited: true } : p));
+    centered.current = true;
+    mapRef.current?.flyTo(h, 17);
+  }
+
   async function toMyLocation() {
     const fix = await locate();
     if (fix) mapRef.current?.flyTo(fix, 17);
@@ -163,21 +199,71 @@ export function StepLocation({
               <label htmlFor="address" className="sr-only">
                 Ünvan
               </label>
+              <div className="relative">
               <input
                 id="address"
                 value={place?.address ?? ""}
                 maxLength={ADDRESS_MAX}
-                disabled={!place}
                 onChange={(e) => {
                   const v = e.target.value.slice(0, ADDRESS_MAX);
-                  setPlace((p) => (p ? { ...p, address: v, addressEdited: true } : p));
+                  setHits(null);
+                  // Yer hələ təyin olunmayıbsa xəritənin mərkəzi götürülür — yazmaq heç vaxt bloklanmır
+                  setPlace((p) => {
+                    const base = p ?? { ...(mapRef.current?.getCenter() ?? initial), locality: null, source: "map" as const, accuracy: null };
+                    return { ...base, address: v, addressEdited: true };
+                  });
                 }}
-                placeholder={geocoding ? "Ünvan müəyyənləşdirilir…" : place ? "Küçə, ev nömrəsi və ya yaxın obyekt" : "Yer seçilməyib"}
+                placeholder={geocoding ? "Ünvan müəyyənləşdirilir…" : "Küçə, ev nömrəsi və ya yaxın obyekt"}
                 autoComplete="street-address"
-                enterKeyHint="done"
-                onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
-                className="block w-full rounded-xl border-2 border-line bg-surface px-3 py-2 text-[17px] font-bold text-ink outline-none placeholder:text-[15px] placeholder:font-semibold placeholder:text-subtle focus:border-primary"
+                enterKeyHint="search"
+                onKeyDown={(e) => {
+                  if (e.key !== "Enter") return;
+                  e.preventDefault();
+                  if (place?.addressEdited) void searchTyped();
+                  e.currentTarget.blur();
+                }}
+                className="block w-full rounded-xl border-2 border-line bg-surface py-2 pl-3 pr-12 text-[17px] font-bold text-ink outline-none placeholder:text-[15px] placeholder:font-semibold placeholder:text-subtle focus:border-primary"
               />
+              <button
+                type="button"
+                onClick={searchTyped}
+                disabled={(place?.address?.trim().length ?? 0) < 3 || searching}
+                aria-label="Ünvanı xəritədə tap"
+                title="Ünvanı xəritədə tap"
+                className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-primary-ink disabled:text-subtle"
+              >
+                {searching ? (
+                  <span className="h-5 w-5 animate-spin rounded-full border-[2.5px] border-line border-t-primary" />
+                ) : (
+                  <span className="h-5 w-5">
+                    <Icon name="search" />
+                  </span>
+                )}
+              </button>
+              </div>
+              {hits && (
+                <ul className="mt-2 overflow-hidden rounded-xl border border-line" role="listbox" aria-label="Tapılan ünvanlar">
+                  {hits.map((h, i) => (
+                    <li key={`${h.lat},${h.lng},${i}`} className={i ? "border-t border-line-soft" : ""}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={false}
+                        onClick={() => applyHit(h)}
+                        className="flex w-full items-start gap-2.5 px-3 py-2.5 text-left hover:bg-bg"
+                      >
+                        <span className="mt-0.5 h-4 w-4 flex-none text-muted">
+                          <Icon name="pin" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block truncate text-[15px] font-semibold">{h.label}</span>
+                          {h.locality && <span className="block truncate text-[13px] text-muted">{h.locality}</span>}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <div className="mt-1 flex items-center gap-2 px-1 text-sm text-muted">
                 <span className="truncate">{place?.locality ?? (place ? `${place.lat.toFixed(5)}, ${place.lng.toFixed(5)}` : "")}</span>
                 {place?.addressEdited && place.autoAddress && place.autoAddress !== place.address && (

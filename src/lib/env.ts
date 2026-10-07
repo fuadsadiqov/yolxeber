@@ -17,7 +17,8 @@ const schema = z.object({
   MEDIA_DIR: z.string().default("./data/media"),
 
   NOMINATIM_URL: z.string().url().default("https://nominatim.openstreetmap.org"),
-  NOMINATIM_USER_AGENT: z.string().default("YolXeber/0.1 (admin@example.com)"),
+  // Nominatim tətbiqi tanıya bilməlidir; "example.com" kimi nümunə dəyərləri 403 ilə bloklayır.
+  NOMINATIM_USER_AGENT: z.string().default("YolXeber/1.0 (+https://github.com/fuadsadiqov/yolxeber)"),
 
   VAPID_PUBLIC_KEY: z.string().optional(),
   VAPID_PRIVATE_KEY: z.string().optional(),
