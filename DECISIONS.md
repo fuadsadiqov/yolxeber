@@ -4,6 +4,13 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — v1.0.1: panellərin TabBar altında qalması
+
+- **Səbəb:** `Sheet` komponenti çağırıldığı yerin içində render olunurdu. Mobil xəritə ekranında düymələr `z-[600]` qatındadır, ona görə `fixed` + `z-[1500]` panel həmin qatın içində qalırdı və TabBar-ın (`z-[1000]`) altına düşürdü. 385×866 ölçüsündə təkrarlanıb.
+- **Həll:** `Sheet` `createPortal` ilə `document.body`-yə render olunur, həmişə ən üst qatdadır.
+- Test zamanı qeyd: localhost-da əvvəlki production testindən qalan service worker köhnə JS-i keşdən verirdi. Real istifadəçilər üçün problem deyil: yeni build-in faylları hash-li adlarla precache olunur, `skipWaiting` və `clientsClaim` aktivdir.
+- Tam ekran baxış: qara fona (şəklin kənarına) toxunanda bağlanır. Şəklin özünə toxunma iki dəfə toxunmaqla böyütmə üçün qalır.
+
 ## 2026-10-07 — v1.0.0: versiyalaşdırma; detalda təsvirin yeri
 
 - **Versiyalaşdırma (SemVer).** Hazırkı vəziyyət ilk buraxılış **v1.0.0** kimi qeyd olunub (git tag `v1.0.0`).

@@ -10,6 +10,14 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 
 ## [Buraxılmamış]
 
+## [1.0.1] — 2026-10-07
+
+### Düzəldildi
+- Mobildə "Tətbiqi yüklə" (iPhone təlimatı) və digər alt panellər aşağıdakı menyunun (TabBar) altında qalırdı. Panellər indi həmişə ən üstdə açılır.
+
+### Dəyişdi
+- Tam ekran şəkil baxışı şəklin kənarındakı qara sahəyə toxunanda bağlanır.
+
 ## [1.0.0] — 2026-10-07
 
 İlk versiyalaşdırılmış buraxılış.
@@ -33,5 +41,6 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 - Açıq və tünd tema, Poppins şrifti, Azərbaycan dilində interfeys.
 - Docker deploy: PostGIS, app, mövcud reverse proxy ilə inteqrasiya.
 
-[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.0...HEAD
+[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/fuadsadiqov/yolxeber/releases/tag/v1.0.0

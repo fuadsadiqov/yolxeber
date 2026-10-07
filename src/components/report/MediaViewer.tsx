@@ -88,6 +88,11 @@ export function MediaViewer({
     box.scrollTop = zoomed.y * box.scrollHeight - box.clientHeight / 2;
   }, [zoomed]);
 
+  /** Şəklin kənarındakı qara sahəyə (fona) toxunanda bağlanır — yalnız birbaşa fona, şəklə/düyməyə yox */
+  const onBackdrop = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) close();
+  };
+
   /** İki dəfə toxunma / klik — böyüt və ya kiçilt */
   function onImageTap(e: React.MouseEvent<HTMLImageElement>) {
     const now = Date.now();
@@ -106,6 +111,7 @@ export function MediaViewer({
   return (
     <div className="fixed inset-0 z-[1600] flex flex-col bg-black text-white" role="dialog" aria-modal="true" aria-label={`${title} — şəkillər`}>
       <div
+        onClick={onBackdrop}
         className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-4 pb-6"
         style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.5rem)", background: "linear-gradient(rgba(0,0,0,.55), transparent)" }}
       >
@@ -145,7 +151,7 @@ export function MediaViewer({
           onScroll={(e) => setIndex(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
         >
           {media.map((m, i) => (
-            <div key={m.id} className="flex h-full w-full flex-none snap-center items-center justify-center">
+            <div key={m.id} onClick={onBackdrop} className="flex h-full w-full flex-none snap-center items-center justify-center">
               {m.kind === "image" ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

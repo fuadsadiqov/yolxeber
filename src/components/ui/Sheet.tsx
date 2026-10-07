@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
 
-/** Sadə modal alt panel (mobil) / mərkəzdə dialoq (masaüstü). Esc və fona toxunuş bağlayır. */
+/**
+ * Sadə modal alt panel (mobil) / mərkəzdə dialoq (masaüstü). Esc və fona toxunuş bağlayır.
+ * document.body-yə portal ilə render olunur — çağırıldığı yerin z-index qatından (məs. xəritə üzərindəki
+ * düymələr, z-[600]) asılı olmasın və alt TabBar-ın altında qalmasın.
+ */
 export function Sheet({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) {
   const panel = useRef<HTMLDivElement>(null);
 
@@ -21,8 +26,8 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
     };
   }, [open, onClose]);
 
-  if (!open) return null;
-  return (
+  if (!open || typeof document === "undefined") return null;
+  return createPortal(
     <div className="fixed inset-0 z-[1500] flex items-end justify-center md:items-center" role="presentation">
       <div className="absolute inset-0 bg-black/45" onClick={onClose} />
       <div
@@ -45,6 +50,7 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
