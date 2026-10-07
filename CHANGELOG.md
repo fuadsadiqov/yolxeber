@@ -10,6 +10,11 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 
 ## [Buraxılmamış]
 
+## [1.1.1] — 2026-10-07
+
+### Dəyişdi
+- Alt menyudakı mərkəzi "Bildir" düyməsi böyüdüldü (~22%) və yumru edildi, menyudan bir az daha yuxarı qalxır.
+
 ## [1.1.0] — 2026-10-07
 
 ### Əlavə olundu
@@ -46,7 +51,8 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 - Açıq və tünd tema, Poppins şrifti, Azərbaycan dilində interfeys.
 - Docker deploy: PostGIS, app, mövcud reverse proxy ilə inteqrasiya.
 
-[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.0...HEAD
+[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/fuadsadiqov/yolxeber/releases/tag/v1.0.0

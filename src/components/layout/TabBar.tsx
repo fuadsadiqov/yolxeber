@@ -35,12 +35,13 @@ export function TabBar() {
       style={{ height: "calc(5.25rem + env(safe-area-inset-bottom))", paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <Tab href="/" label="Xəritə" icon="map" active={path === "/"} />
-      <Link href="/bildir" className="-mt-5 flex flex-1 flex-col items-center gap-[0.1875rem]" aria-label="Bildiriş əlavə et">
+      {/* Mərkəzi "Bildir" — böyük, yumru, tab bar-dan yuxarı qalxmış əsas əməliyyat düyməsi */}
+      <Link href="/bildir" className="-mt-8 flex flex-1 flex-col items-center gap-1" aria-label="Bildiriş əlavə et">
         <span
-          className="flex h-14 w-14 items-center justify-center rounded-[1.125rem] bg-accent text-accent-ink"
-          style={{ boxShadow: "0 0 0 0.25rem var(--surface), 0 0.5rem 1.125rem rgba(245,184,0,.45)" }}
+          className="flex h-[4.25rem] w-[4.25rem] items-center justify-center rounded-full bg-accent text-accent-ink transition-transform active:scale-95"
+          style={{ boxShadow: "0 0 0 0.3125rem var(--surface), 0 0.5rem 1.25rem rgba(245,184,0,.5)" }}
         >
-          <span className="h-7 w-7">
+          <span className="h-8 w-8">
             <Icon name="plus" />
           </span>
         </span>
