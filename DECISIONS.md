@@ -4,6 +4,17 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — Stop kateqoriyası və bildirişin redaktəsi
+
+- **Yeni kateqoriya "Stop nişanının tələbi pozulması"** (`stop`): `drizzle/0003_stop_category_edit.sql` (`ALTER TYPE ... ADD VALUE`), səkkizbucaqlı ikon, tünd-qırmızı rəng (tünd temada mətn açıq tonda). Migration PGlite-da tranzaksiya daxilində yoxlanılıb.
+- **Müəllif öz bildirişini redaktə edə bilir**, yaratma ilə eyni 3 addımlı formada (`/bildiris/[id]/duzelt`, `PATCH /api/reports/:id`):
+  - forma mövcud dəyərlərlə dolur, mövcud media saxlanıla və ya silinə, yenisi əlavə oluna bilər (cəmi 1–4);
+  - yalnız bildirişi yaradan cihaz redaktə edə bilir, sahiblik faylların emalından əvvəl yoxlanılır;
+  - **kateqoriya dəyişərsə və ya yer 150 m-dən çox sürüşərsə, səslər sıfırlanır**, yoxsa təsdiqlənmiş bildirişi başqa şeyə çevirib təsdiqləri saxlamaq olardı;
+  - detalda "düzəliş edilib" qeydi (`edited_at`), müəllif üçün yuxarıda qələm düyməsi və "Bildirişi düzəlt" linki;
+  - çıxarılan mediaların faylları diskdən silinir.
+- Fayl emalı (`processUploads`) və forma sahələri (`parseReportFields`) yaratma ilə redaktə arasında ortaqdır.
+
 ## 2026-10-07 — Rəylər və push bildirişlərinin hamıya göndərilməsi
 
 - **Rəylər** (detal səhifəsinin ən aşağısı), `drizzle/0002_comments.sql`:

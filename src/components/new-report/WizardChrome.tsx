@@ -3,7 +3,19 @@ import { Icon, type IconName } from "@/components/ui/Icon";
 const STEPS = ["Media", "Yer", "Təfsilat"];
 
 /** Addım başlığı — dizayn 03–05: sol düymə, "Yeni bildiriş", "1/3", proqres zolaqları */
-export function WizardHeader({ step, leftIcon, onLeft, leftLabel }: { step: 1 | 2 | 3; leftIcon: IconName; onLeft: () => void; leftLabel: string }) {
+export function WizardHeader({
+  title = "Yeni bildiriş",
+  step,
+  leftIcon,
+  onLeft,
+  leftLabel,
+}: {
+  title?: string;
+  step: 1 | 2 | 3;
+  leftIcon: IconName;
+  onLeft: () => void;
+  leftLabel: string;
+}) {
   return (
     <div className="px-4" style={{ paddingTop: "env(safe-area-inset-top)" }}>
       <div className="flex h-14 items-center justify-between">
@@ -12,7 +24,7 @@ export function WizardHeader({ step, leftIcon, onLeft, leftLabel }: { step: 1 | 
             <Icon name={leftIcon} />
           </span>
         </button>
-        <h1 className="text-[1.0625rem] font-bold">Yeni bildiriş</h1>
+        <h1 className="text-[1.0625rem] font-bold">{title}</h1>
         <div className="w-12 text-right text-[0.9375rem] font-semibold text-primary-ink" aria-label={`Addım ${step}, cəmi 3`}>
           {step}/3
         </div>

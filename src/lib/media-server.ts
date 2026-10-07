@@ -108,3 +108,24 @@ export async function processVideo(input: Buffer, mime: string): Promise<Process
     await rm(dir, { recursive: true, force: true });
   }
 }
+
+const VIDEO_TYPES = new Set(["video/mp4", "video/quicktime", "video/webm"]);
+
+/** Formdan gələn faylları yoxlayıb emal edir (yaratma və redaktə üçün ortaq). */
+export async function processUploads(files: File[]): Promise<ProcessedMedia[]> {
+  if (files.length > MAX_FILES) throw new ReportActionError("too_many_files");
+  if (files.filter((f) => f.type.startsWith("video/")).length > 1) throw new ReportActionError("too_many_files");
+  // Ardıcıl emal — eyni anda bir neçə böyük faylın yaddaşı doldurmasının qarşısını alır.
+  const media: ProcessedMedia[] = [];
+  for (const f of files) {
+    if (f.type.startsWith("video/")) {
+      if (!VIDEO_TYPES.has(f.type)) throw new ReportActionError("media_invalid");
+      if (f.size > MAX_VIDEO_BYTES) throw new ReportActionError("video_too_large", 413);
+      media.push(await processVideo(Buffer.from(await f.arrayBuffer()), f.type));
+    } else {
+      if (f.size > MAX_IMAGE_BYTES) throw new ReportActionError("media_invalid", 413);
+      media.push(await processImage(Buffer.from(await f.arrayBuffer())));
+    }
+  }
+  return media;
+}

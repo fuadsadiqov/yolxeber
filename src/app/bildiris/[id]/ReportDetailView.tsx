@@ -132,7 +132,10 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         )}
         <div className="absolute inset-x-4 flex justify-between" style={{ top: "calc(env(safe-area-inset-top) + 0.5rem)" }}>
           <RoundButton icon="chevL" label="Geri" onClick={back} />
-          <RoundButton icon="share" label="Paylaş" onClick={share} />
+          <div className="flex gap-2">
+            {r.isOwn && <RoundButton icon="edit" label="Bildirişi düzəlt" onClick={() => router.push(`/bildiris/${r.id}/duzelt`)} />}
+            <RoundButton icon="share" label="Paylaş" onClick={share} />
+          </div>
         </div>
         {r.media.length > 1 && (
           <span className="absolute bottom-4 right-4 flex h-7 items-center rounded-full bg-[rgba(22,33,28,.72)] px-2.5 text-xs font-semibold text-white">
@@ -172,6 +175,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             <time suppressHydrationWarning dateTime={r.createdAt} title={new Date(r.createdAt).toLocaleString("az-AZ")}>
               {relativeTime(r.createdAt)}
             </time>
+            {r.editedAt && <span title={new Date(r.editedAt).toLocaleString("az-AZ")}>· düzəliş edilib</span>}
           </div>
         </div>
 
@@ -228,9 +232,20 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             )}
           </div>
           {r.isOwn ? (
-            <p className="rounded-xl bg-line-soft px-3 py-3 text-center text-sm text-muted">
-              Bu sizin bildirişinizdir — öz bildirişinizə səs verə bilməzsiniz.
-            </p>
+            <div className="flex flex-col gap-2">
+              <p className="rounded-xl bg-line-soft px-3 py-3 text-center text-sm text-muted">
+                Bu sizin bildirişinizdir — öz bildirişinizə səs verə bilməzsiniz.
+              </p>
+              <Link
+                href={`/bildiris/${r.id}/duzelt`}
+                className="flex h-[3.25rem] items-center justify-center gap-2 rounded-2xl border-[0.0938rem] border-line-strong text-[0.9375rem] font-semibold"
+              >
+                <span className="h-5 w-5">
+                  <Icon name="edit" />
+                </span>
+                Bildirişi düzəlt
+              </Link>
+            </div>
           ) : (
             <>
               <button

@@ -191,8 +191,8 @@ export async function feed(opts: { sort: FeedSort; at: LatLng | null; cursor?: s
 export async function reportDetail(id: string, deviceId: string | null, at: LatLng | null = null): Promise<ReportDetail | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
   const pt = at ? point(at) : null;
-  const [row] = await sql<(CardRow & { device_id: string })[]>`
-    SELECT x.*, r2.device_id FROM (${cardSelect(pt)} WHERE r.id = ${id}::uuid AND r.status NOT IN ('hidden', 'deleted')) x
+  const [row] = await sql<(CardRow & { device_id: string; edited_at: Date | null })[]>`
+    SELECT x.*, r2.device_id, r2.edited_at FROM (${cardSelect(pt)} WHERE r.id = ${id}::uuid AND r.status NOT IN ('hidden', 'deleted')) x
     JOIN reports r2 ON r2.id = x.id`;
   if (!row) return null;
 
@@ -218,6 +218,7 @@ export async function reportDetail(id: string, deviceId: string | null, at: LatL
         height: m.height,
       }),
     ),
+    editedAt: row.edited_at ? row.edited_at.toISOString() : null,
     myVote: mine[0]?.vote ?? null,
     myFlagged: mine[0]?.flagged ?? false,
     isOwn: deviceId === row.device_id,

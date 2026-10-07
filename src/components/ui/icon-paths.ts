@@ -24,6 +24,7 @@ export const PATHS = {
   clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2",
   route: "M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 15V9a3 3 0 0 1 3-3h3M18 9v6a3 3 0 0 1-3 3h-3",
   navigation: "M12 2 4.5 20.3l.7.7L12 18l6.8 3 .7-.7L12 2z",
+  edit: "M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4",
   copy: "M9 9h11v11H9zM5 15H4V4h11v1",
   pin: "M12 21s-7-6.5-7-12a7 7 0 1 1 14 0c0 5.5-7 12-7 12zM12 6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z",
   thumb: "M7 11v9H4v-9h3zM7 11l4-8c1.5 0 2.5 1 2.5 2.5V9H19a2 2 0 0 1 2 2.3l-1.2 6.6A2.5 2.5 0 0 1 17.3 20H7",
@@ -42,6 +43,8 @@ export const PATHS = {
   zolaq: "M5 3v18M19 3v18M12 3v3M12 10v4M12 18v3",
   donus: "M8 20v-9a4 4 0 0 1 8 0v5M13 13l3 3 3-3M3 3l18 18",
   park: "M9 20V4h5a4.5 4.5 0 0 1 0 9H9",
+  // Səkkizbucaqlı STOP nişanı + üfüqi xətt
+  stop: "M8.2 3h7.6L21 8.2v7.6L15.8 21H8.2L3 15.8V8.2L8.2 3zM7.5 12h9",
   diger: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01",
 } as const;
 

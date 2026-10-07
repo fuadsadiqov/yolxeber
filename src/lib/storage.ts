@@ -25,3 +25,8 @@ export async function saveFile(key: string, data: Buffer | Uint8Array) {
 export async function deleteReportMedia(reportId: string) {
   await rm(storagePath(`r/${reportId}`), { recursive: true, force: true });
 }
+
+/** Ayrı-ayrı faylları silir (redaktədə çıxarılan media) */
+export async function deleteFiles(keys: (string | null | undefined)[]) {
+  await Promise.all(keys.filter((k): k is string => !!k).map((k) => rm(storagePath(k), { force: true })));
+}

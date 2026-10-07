@@ -8,7 +8,10 @@ const MAX_SIDE = 1600;
 export type DraftMedia = {
   id: string;
   kind: "image" | "video";
-  blob: Blob;
+  /** Yeni seçilmiş fayl; redaktədə serverdəki mövcud media üçün null */
+  blob: Blob | null;
+  /** Redaktə: serverdə artıq olan medianın id-si (saxlanılırsa göndərilir) */
+  existingId?: string;
   /** Önizləmə üçün object URL (silinəndə revoke olunur) */
   url: string;
   fileName: string;

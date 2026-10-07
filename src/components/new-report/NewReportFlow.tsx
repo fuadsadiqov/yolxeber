@@ -17,11 +17,20 @@ import { BottomBar, PrimaryButton, SecondaryButton, WizardHeader } from "./Wizar
 
 type Step = 1 | 2 | 3 | "done";
 
+/** Redaktə rejimi üçün ilkin dəyərlər (müəllifin öz bildirişi) */
+export type EditInitial = {
+  id: string;
+  category: CategoryKey;
+  note: string;
+  place: PickedPlace;
+  media: DraftMedia[];
+};
+
 /** Multipart yükləmə — fetch yükləmə proqresini göstərə bilmədiyi üçün XHR */
-function upload(form: FormData, onProgress: (p: number) => void) {
-  return new Promise<{ id: string }>((resolve, reject) => {
+function upload(method: "POST" | "PATCH", url: string, form: FormData, onProgress: (p: number) => void) {
+  return new Promise<{ id: string; votesReset?: boolean }>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/reports");
+    xhr.open(method, url);
     xhr.responseType = "json";
     xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
     xhr.onload = () => {
@@ -33,21 +42,22 @@ function upload(form: FormData, onProgress: (p: number) => void) {
   });
 }
 
-export function NewReportFlow() {
+/** Bildiriş əlavə etmə (və edit verilərsə — müəllifin redaktəsi) — eyni 3 addımlı forma */
+export function NewReportFlow({ edit }: { edit?: EditInitial } = {}) {
   const router = useRouter();
   const toast = useToast();
   const [step, setStep] = useState<Step>(1);
-  const [media, setMedia] = useState<DraftMedia[]>([]);
-  const [place, setPlace] = useState<PickedPlace | null>(null);
-  const [category, setCategory] = useState<CategoryKey | null>(null);
-  const [note, setNote] = useState("");
+  const [media, setMedia] = useState<DraftMedia[]>(edit?.media ?? []);
+  const [place, setPlace] = useState<PickedPlace | null>(edit?.place ?? null);
+  const [category, setCategory] = useState<CategoryKey | null>(edit?.category ?? null);
+  const [note, setNote] = useState(edit?.note ?? "");
   const [progress, setProgress] = useState<number | null>(null);
   const [created, setCreated] = useState<{ id: string; title: string; address: string | null; category: CategoryKey } | null>(null);
   const mediaRef = useRef(media);
   mediaRef.current = media;
 
   // Səhifədən çıxanda önizləmə URL-lərini azad edirik
-  useEffect(() => () => mediaRef.current.forEach((m) => URL.revokeObjectURL(m.url)), []);
+  useEffect(() => () => mediaRef.current.forEach((m) => m.blob && URL.revokeObjectURL(m.url)), []);
 
   // Telefonun "geri" düyməsi addımlar arasında işləsin: irəli gedəndə history-yə yazı əlavə edirik,
   // geri (popstate) gələndə bir addım geri qayıdırıq.
@@ -70,10 +80,22 @@ export function NewReportFlow() {
     form.set("lng", place.lng.toFixed(6));
     // Əl ilə yazılmış ünvan; yazılmayıbsa server koordinatdan özü təyin edir
     if (place.addressEdited && place.address?.trim()) form.set("address", place.address.trim());
-    for (const m of media) form.append("media", m.blob, m.fileName);
+    for (const m of media) {
+      if (m.existingId) form.append("keep", m.existingId);
+      else if (m.blob) form.append("media", m.blob, m.fileName);
+    }
     setProgress(0);
     try {
-      const { id } = await upload(form, setProgress);
+      if (edit) {
+        const r = await upload("PATCH", `/api/reports/${edit.id}`, form, setProgress);
+        toast(r.votesReset ? "Dəyişikliklər saxlanıldı. Əsaslı dəyişiklik olduğu üçün təsdiqlər sıfırlandı." : "Dəyişikliklər saxlanıldı", {
+          icon: "check",
+        });
+        router.replace(`/bildiris/${edit.id}`);
+        router.refresh();
+        return;
+      }
+      const { id } = await upload("POST", "/api/reports", form, setProgress);
       setCreated({ id, title: reportTitle(note, category), address: place.address?.trim() || null, category });
       setStep("done");
     } catch (e) {
@@ -90,6 +112,7 @@ export function NewReportFlow() {
   return (
     <main className="relative mx-auto min-h-dvh max-w-[30rem] bg-bg pb-32">
       <WizardHeader
+        title={edit ? "Bildirişi düzəlt" : "Yeni bildiriş"}
         step={step as 1 | 2 | 3}
         leftIcon={step === 1 ? "x" : "chevL"}
         leftLabel={step === 1 ? "Bağla" : "Geri"}
@@ -109,13 +132,13 @@ export function NewReportFlow() {
         {step === 3 ? (
           <PrimaryButton disabled={!category || progress != null} onClick={submit}>
             {progress != null ? (
-              `Göndərilir… ${Math.round(progress * 100)}%`
+              `${edit ? "Saxlanılır" : "Göndərilir"}… ${Math.round(progress * 100)}%`
             ) : (
               <>
                 <span className="h-5 w-5">
-                  <Icon name="send" />
+                  <Icon name={edit ? "check" : "send"} />
                 </span>
-                Paylaş
+                {edit ? "Yadda saxla" : "Paylaş"}
               </>
             )}
           </PrimaryButton>

@@ -42,6 +42,8 @@ export type MediaItem = {
 
 export type ReportDetail = ReportCard & {
   media: MediaItem[];
+  /** Müəllif sonradan düzəliş edibsə */
+  editedAt: string | null;
   myVote: VoteKind | null;
   myFlagged: boolean;
   isOwn: boolean;
@@ -99,4 +101,5 @@ export const API_ERRORS: Record<string, string> = {
   comment_rate_limited: "Saatda maksimum rəy sayına çatdınız. Bir az sonra yenidən yazın.",
   comment_too_fast: "Rəylər arasında bir neçə saniyə gözləyin.",
   own_comment: "Öz rəyinizdən şikayət edə bilməzsiniz.",
+  not_owner: "Yalnız öz bildirişinizi düzəldə bilərsiniz.",
 };
