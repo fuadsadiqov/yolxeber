@@ -3,8 +3,9 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { StatusBadge, STRIPES } from "@/components/report/bits";
+import { MediaViewer } from "@/components/report/MediaViewer";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { Sheet } from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
@@ -35,6 +36,9 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
   const [busy, setBusy] = useState<VoteKind | null>(null);
   const [slide, setSlide] = useState(0);
   const [flagOpen, setFlagOpen] = useState(false);
+  /** Tam ekran baxışda açılan media indeksi (null — bağlıdır) */
+  const [viewerAt, setViewerAt] = useState<number | null>(null);
+  const closeViewer = useCallback(() => setViewerAt(null), []);
   // Server və müştəri render-i eyni olsun deyə origin yalnız mount-dan sonra oxunur
   const [origin, setOrigin] = useState("");
   useEffect(() => setOrigin(location.origin), []);
@@ -96,14 +100,21 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
             {r.media.map((m, i) => (
               <div key={m.id} className="h-full w-full flex-none snap-center">
                 {m.kind === "image" ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={m.url}
-                    alt={i === 0 ? r.title : ""}
-                    loading={i === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="h-full w-full object-cover"
-                  />
+                  <button
+                    type="button"
+                    onClick={() => setViewerAt(i)}
+                    aria-label="Şəkli tam ekranda aç"
+                    className="block h-full w-full cursor-zoom-in"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={m.url}
+                      alt={i === 0 ? r.title : ""}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
                 ) : (
                   <video
                     src={m.url}
@@ -283,6 +294,8 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
           </button>
         )}
       </div>
+
+      {viewerAt != null && <MediaViewer media={r.media} start={viewerAt} title={r.title} onClose={closeViewer} />}
 
       <FlagSheet
         open={flagOpen}
