@@ -31,11 +31,26 @@ export function formatDistance(m: number | null | undefined): string {
  * Bildirişin başlığı. Formada ayrıca başlıq sahəsi yoxdur (dizayna uyğun) —
  * qeydin ilk cümləsi götürülür, qeyd boşdursa kateqoriya adı.
  */
+const TITLE_MAX = 64;
+const firstSentence = (text: string) => text.split(/(?<=[.!?])\s|\n/)[0];
+
 export function reportTitle(note: string | null | undefined, category: CategoryKey): string {
   const text = (note ?? "").trim();
   if (!text) return CATEGORIES[category].name;
-  const first = text.split(/(?<=[.!?])\s|\n/)[0].replace(/[.!?]+$/, "");
-  return first.length > 64 ? `${first.slice(0, 61).trimEnd()}…` : first;
+  const first = firstSentence(text).replace(/[.!?]+$/, "");
+  return first.length > TITLE_MAX ? `${first.slice(0, TITLE_MAX - 3).trimEnd()}…` : first;
+}
+
+/**
+ * Detalda başlığın altındakı təsvir — qeydin başlıqda göstərilməyən hissəsi (təkrar olmasın).
+ * Başlıq qısaldılıbsa (…), tam qeyd göstərilir; qeyd tək cümlədirsə — boş.
+ */
+export function reportDescription(note: string | null | undefined): string {
+  const text = (note ?? "").trim();
+  if (!text) return "";
+  const first = firstSentence(text);
+  if (first.replace(/[.!?]+$/, "").length > TITLE_MAX) return text;
+  return text.slice(first.length).trim();
 }
 
 export function formatTime(iso: string | Date) {

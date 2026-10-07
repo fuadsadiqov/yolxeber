@@ -1,6 +1,6 @@
 {
   "name": "yolxeber",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,10 @@
     "db:up": "docker compose up -d db",
     "db:migrate": "node --env-file=.env scripts/migrate.mjs",
     "db:seed": "node --env-file=.env --import tsx scripts/seed.ts",
-    "vapid": "web-push generate-vapid-keys"
+    "vapid": "web-push generate-vapid-keys",
+    "release:patch": "npm version patch -m \"Buraxılış v%s\"",
+    "release:minor": "npm version minor -m \"Buraxılış v%s\"",
+    "release:major": "npm version major -m \"Buraxılış v%s\""
   },
   "dependencies": {
     "@fontsource/poppins": "^5.3.0",

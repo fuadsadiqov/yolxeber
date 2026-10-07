@@ -4,6 +4,14 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — v1.0.0: versiyalaşdırma; detalda təsvirin yeri
+
+- **Versiyalaşdırma (SemVer).** Hazırkı vəziyyət ilk buraxılış **v1.0.0** kimi qeyd olunub (git tag `v1.0.0`).
+  - Dəyişikliklər `CHANGELOG.md`-də (Keep a Changelog) aparılır.
+  - Versiya `package.json`-dan build zamanı `NEXT_PUBLIC_APP_VERSION` kimi daxil edilir: xəbərdarlıqlar səhifəsində, admin paneldə və `/api/health`-də görünür.
+  - Buraxılış: `pnpm release:patch|minor|major` (npm version: commit + tag) → `git push --follow-tags`.
+- **Detal: başlıqdan sonra təsvir, sonra xəritə.** Başlıq qeydin ilk cümləsindən götürüldüyü üçün təsvir qeydin **qalan hissəsini** göstərir, ona görə təkrar olmur. Başlıq qısaldılıbsa (…), tam qeyd göstərilir. Qeyd tək cümlədirsə, təsvir göstərilmir. Görünüş: bir az böyük şrift, ağ fon və kateqoriya rəngində sol xətt ("önə çıxan, amma çox yox"). Köhnə "QEYD" bölməsi çıxarıldı.
+
 ## 2026-10-07 — Ana ekrana əlavə etmə (PWA quraşdırma)
 
 - Brauzerlər tətbiqi tam avtomatik quraşdırmağa icazə vermir, ona görə bir toxunuşla quraşdırma qurulub:

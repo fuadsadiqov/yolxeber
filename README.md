@@ -110,7 +110,27 @@ Seed-dən sonra:
 
 ---
 
-## 4. Struktur
+## 4. Versiyalaşdırma
+
+Tətbiq [SemVer](https://semver.org/) ilə versiyalaşdırılır (`MAJOR.MINOR.PATCH`). Hazırkı versiya `package.json`-dadır. O, xəbərdarlıqlar səhifəsinin altında, admin paneldə və `GET /api/health` cavabında (`version`) görünür.
+
+| Dəyişiklik | Versiya | Nümunə |
+|---|---|---|
+| Xəta düzəlişi, kiçik görünüş dəyişikliyi | **PATCH** | 1.0.0 → 1.0.1 |
+| Yeni funksiya | **MINOR** | 1.0.1 → 1.1.0 |
+| Uyğunsuz dəyişiklik (API, geri qaytarılmayan DB) | **MAJOR** | 1.1.0 → 2.0.0 |
+
+Buraxılış addımları:
+
+1. `CHANGELOG.md`-də `[Buraxılmamış]` altındakı qeydləri yeni versiya başlığına köçürün və tarixini yazın. Sonra commit edin.
+2. Versiyanı artırın. Bu əmr `package.json`-u yeniləyir, `Buraxılış vX.Y.Z` commit-i və `vX.Y.Z` git tag-ı yaradır (iş qovluğu təmiz olmalıdır):
+   ```bash
+   pnpm release:patch   # və ya release:minor / release:major
+   git push --follow-tags
+   ```
+3. Serverdə: `git pull && docker compose -f docker-compose.yml -f docker-compose.proxy.yml --profile prod up -d --build`. Sonra `curl /api/health` ilə versiyanı yoxlayın.
+
+## 5. Struktur
 
 ```
 design/                    Claude Design faylları (referans)

@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
+import pkg from "./package.json" with { type: "json" };
 
 // Service worker yalnız production build-də yaradılır (dev-də keş qarışıqlıq yaratmasın).
 const withSerwist = withSerwistInit({
@@ -13,6 +14,8 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  // Tətbiqin versiyası (package.json) — UI-da və /api/health-də göstərilir
+  env: { NEXT_PUBLIC_APP_VERSION: pkg.version },
   // Docker image üçün minimal server paketi (.next/standalone). Yalnız Dockerfile-da aktivdir:
   // Windows-da pnpm symlink-ləri standalone kopyalamanı EPERM ilə pozur.
   output: process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined,

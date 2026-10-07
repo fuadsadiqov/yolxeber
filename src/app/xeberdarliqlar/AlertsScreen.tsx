@@ -104,6 +104,8 @@ export function AlertsScreen() {
           iPhone-da bildirişlər yalnız sayt “Ana ekrana əlavə et” ilə quraşdırılıb oradan açılanda işləyir (iOS 16.4+).
         </li>
       </ul>
+
+      <p className="mt-10 text-center text-xs text-subtle">YolXəbər v{process.env.NEXT_PUBLIC_APP_VERSION}</p>
     </main>
   );
 }

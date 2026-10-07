@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/Toast";
 import { api, ApiError } from "@/lib/client/api";
 import { distanceM, useGeo } from "@/lib/client/geo";
 import { CATEGORIES } from "@/lib/categories";
-import { formatDistance, relativeTime } from "@/lib/format";
+import { formatDistance, relativeTime, reportDescription } from "@/lib/format";
 import type { ReportDetail, ReportStatus, VoteKind } from "@/lib/types";
 
 const MapCanvas = dynamic(() => import("@/components/map/MapCanvas"), {
@@ -44,6 +44,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
   const [origin, setOrigin] = useState("");
   useEffect(() => setOrigin(location.origin), []);
   const cat = CATEGORIES[r.category];
+  const description = reportDescription(r.note);
 
   const dist = position ? distanceM(position, r) : r.distanceM;
   const pin = useMemo(() => ({ lat: r.lat, lng: r.lng, category: r.category }), [r.lat, r.lng, r.category]);
@@ -179,6 +180,16 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
           </div>
         </div>
 
+        {/* Təsvir — başlıqdan sonra, xəritədən əvvəl; kateqoriya rəngində incə xətt ilə bir az önə çıxır */}
+        {description && (
+          <p
+            className="whitespace-pre-line rounded-r-xl border-l-4 bg-surface py-2.5 pl-3.5 pr-3 text-[1.0625rem] leading-relaxed text-pretty text-ink"
+            style={{ borderLeftColor: cat.color }}
+          >
+            {description}
+          </p>
+        )}
+
         {/* Ünvan + mini xəritə */}
         <div className="overflow-hidden rounded-[1.125rem] bg-surface">
           <div className="flex items-center gap-3 px-3.5 py-3">
@@ -206,13 +217,6 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         </div>
 
         <NavigateSection lat={r.lat} lng={r.lng} title={r.title} />
-
-        {r.note && (
-          <section>
-            <h2 className="mb-1.5 text-[0.8125rem] font-semibold tracking-[.06em] text-muted">QEYD</h2>
-            <p className="text-base leading-normal whitespace-pre-line text-pretty">{r.note}</p>
-          </section>
-        )}
 
         {/* Səsvermə */}
         <section className="flex flex-col gap-3 rounded-[1.125rem] bg-surface p-4" aria-label="Təsdiqləmə">

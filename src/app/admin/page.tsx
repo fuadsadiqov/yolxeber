@@ -32,7 +32,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     <main className="mx-auto max-w-5xl px-4 py-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Admin panel</h1>
+          <h1 className="text-2xl font-bold">
+            Admin panel <span className="align-middle text-sm font-semibold text-subtle">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+          </h1>
           <p className="text-sm text-muted">Şikayət həddini keçən bildirişlər avtomatik gizlədilir və burada görünür.</p>
         </div>
         <div className="flex items-center gap-3 text-sm text-muted">
