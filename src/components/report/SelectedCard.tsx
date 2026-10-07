@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
@@ -15,18 +16,29 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
   const toast = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     let alive = true;
     setR(null);
     setFailed(false);
     api<ReportDetail>(`/api/reports/${id}`)
-      .then((d) => alive && setR(d))
+      .then((d) => {
+        if (!alive) return;
+        setR(d);
+        router.prefetch(`/bildiris/${d.id}`);
+      })
       .catch(() => alive && setFailed(true));
     return () => {
       alive = false;
     };
-  }, [id]);
+  }, [id, router]);
+
+  /** Kartın istənilən yerinə toxunanda detal açılır; düymə və linklər öz işini görür */
+  function openDetail(e: React.MouseEvent<HTMLDivElement>) {
+    if (!r || (e.target as HTMLElement).closest("button, a")) return;
+    router.push(`/bildiris/${r.id}`);
+  }
 
   async function confirm() {
     if (!r) return;
@@ -48,7 +60,8 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
   const cover = r?.media[0];
   return (
     <div
-      className="absolute inset-x-3 z-[700] overflow-hidden rounded-[18px] bg-surface shadow-[0_12px_32px_rgba(22,33,28,.25)] md:left-5 md:right-auto md:top-5 md:w-[300px] dark:border dark:border-line"
+      onClick={openDetail}
+      className={`absolute inset-x-3 z-[700] overflow-hidden rounded-[18px] bg-surface shadow-[0_12px_32px_rgba(22,33,28,.25)] md:left-5 md:right-auto md:top-5 md:w-[300px] dark:border dark:border-line ${r ? "cursor-pointer" : ""}`}
       style={{ top: "calc(env(safe-area-inset-top) + 64px)" }}
       role="dialog"
       aria-label={r?.title ?? "Bildiriş"}
