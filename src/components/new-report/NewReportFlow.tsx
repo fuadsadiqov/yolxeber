@@ -68,11 +68,13 @@ export function NewReportFlow() {
     form.set("note", note.trim());
     form.set("lat", place.lat.toFixed(6));
     form.set("lng", place.lng.toFixed(6));
+    // Əl ilə yazılmış ünvan; yazılmayıbsa server koordinatdan özü təyin edir
+    if (place.addressEdited && place.address?.trim()) form.set("address", place.address.trim());
     for (const m of media) form.append("media", m.blob, m.fileName);
     setProgress(0);
     try {
       const { id } = await upload(form, setProgress);
-      setCreated({ id, title: reportTitle(note, category), address: place.address, category });
+      setCreated({ id, title: reportTitle(note, category), address: place.address?.trim() || null, category });
       setStep("done");
     } catch (e) {
       toast((e as Error).message);

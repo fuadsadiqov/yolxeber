@@ -4,6 +4,13 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — Ünvanı əl ilə yazmaq
+
+- **Addım 2-də ünvan sahəsi redaktə olunur.** Nominatim ünvanı avtomatik doldurur, istifadəçi onu düzəldə və ya yenisini yaza bilər (maks. 120 simvol, məs. "Gənclik metrosunun yanı").
+- Əl ilə yazılandan sonra xəritəni sürüşdürmək mətni əvəz etmir. "Avtomatik ünvan" düyməsi Nominatim variantına qaytarır. Başlıqda "ÜNVAN · ƏL İLƏ" göstərilir.
+- **Server:** `address` sahəsi verilibsə (boşluqlar normallaşdırılır), o saxlanılır. Verilməyibsə, ünvan əvvəlki kimi koordinatdan təyin olunur. Rayon/şəhər (`locality`) həmişə koordinatdan gəlir.
+- Bu, 3-cü mərhələdəki "müştəri ünvanına etibar edilmir" qərarını dəyişir. Ünvan indi qeyd kimi istifadəçi məzmunudur və şikayət/admin moderasiyası ilə idarə olunur.
+
 ## 2026-10-06 — Düzəlişlər: şrift və http-də fayl əlavə etmə
 
 - **Poppins paketin içindədir** (`@fontsource/poppins`, 400/500/600/700, latin + latin-ext). Əvvəl `next/font/google` build zamanı Google Fonts-dan yükləyirdi. Serverdə Docker build zamanı bu alınmayanda şrift səssizcə sistem şriftinə düşürdü.

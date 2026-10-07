@@ -14,13 +14,30 @@ const MapCanvas = dynamic(() => import("@/components/map/MapCanvas"), {
   loading: () => <div className="absolute inset-0 bg-map-bg" />,
 });
 
-export type PickedPlace = LatLng & { address: string | null; locality: string | null; source: "gps" | "map"; accuracy: number | null };
+export type PickedPlace = LatLng & {
+  address: string | null;
+  locality: string | null;
+  source: "gps" | "map";
+  accuracy: number | null;
+  /** İstifadəçi ünvanı əl ilə yazıb — avtomatik ünvan artıq üzərinə yazılmır */
+  addressEdited?: boolean;
+  /** Son avtomatik (Nominatim) ünvan — "avtomatik ünvana qayıt" üçün */
+  autoAddress?: string | null;
+};
+
+export const ADDRESS_MAX = 120;
 
 /**
  * Addım 2 (dizayn 04): pin ekranın mərkəzində sabitdir, istifadəçi xəritəni altında sürüşdürür.
  * GPS-dən gələn mövqedən uzaqlaşdıqda mənbə "xəritədən" olur.
  */
-export function StepLocation({ place, setPlace }: { place: PickedPlace | null; setPlace: (p: PickedPlace) => void }) {
+export function StepLocation({
+  place,
+  setPlace,
+}: {
+  place: PickedPlace | null;
+  setPlace: React.Dispatch<React.SetStateAction<PickedPlace | null>>;
+}) {
   const { position, status, locate } = useGeo();
   const toast = useToast();
   const mapRef = useRef<MapHandle>(null);
@@ -56,13 +73,16 @@ export function StepLocation({ place, setPlace }: { place: PickedPlace | null; s
     const key = `${c.lat.toFixed(5)},${c.lng.toFixed(5)}`;
     if (key === lastKey.current) return;
     lastKey.current = key;
-    setPlace({
+    // Funksional yeniləmə — əl ilə yazılmış ünvan xəritə hərəkətində itməsin
+    setPlace((p) => ({
       ...c,
-      address: place?.address ?? null,
-      locality: place?.locality ?? null,
+      address: p?.address ?? null,
+      locality: p?.locality ?? null,
+      addressEdited: p?.addressEdited,
+      autoAddress: p?.autoAddress,
       source: fromGps ? "gps" : "map",
       accuracy: fromGps ? position!.accuracy : null,
-    });
+    }));
     // Ünvan sorğusu — sürüşdürmə dayandıqdan sonra (Nominatim limitinə hörmət)
     clearTimeout(geoTimer.current);
     setGeocoding(true);
@@ -70,7 +90,16 @@ export function StepLocation({ place, setPlace }: { place: PickedPlace | null; s
       try {
         const g = await api<{ address: string | null; locality: string | null }>(`/api/geocode?${qs({ lat: c.lat.toFixed(6), lng: c.lng.toFixed(6) })}`);
         if (lastKey.current === key)
-          setPlace({ ...c, ...g, source: fromGps ? "gps" : "map", accuracy: fromGps ? position!.accuracy : null });
+          setPlace((p) => ({
+            ...c,
+            locality: g.locality,
+            autoAddress: g.address,
+            // İstifadəçi özü yazıbsa, onun mətnini saxlayırıq
+            address: p?.addressEdited ? p.address : g.address,
+            addressEdited: p?.addressEdited,
+            source: fromGps ? "gps" : "map",
+            accuracy: fromGps ? position!.accuracy : null,
+          }));
       } catch {
         /* ünvan tapılmasa da koordinat kifayətdir */
       } finally {
@@ -122,7 +151,7 @@ export function StepLocation({ place, setPlace }: { place: PickedPlace | null; s
       >
         <div className="mx-auto max-w-[480px]">
           <div className="mb-2 text-xs font-semibold tracking-[.06em] text-muted">
-            ÜNVAN · {place?.source === "gps" ? "AVTOMATİK" : "XƏRİTƏDƏN"}
+            ÜNVAN · {place?.addressEdited ? "ƏL İLƏ" : place?.source === "gps" ? "AVTOMATİK" : "XƏRİTƏDƏN"}
           </div>
           <div className="flex items-start gap-3">
             <span className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-primary-soft text-primary-ink">
@@ -130,12 +159,36 @@ export function StepLocation({ place, setPlace }: { place: PickedPlace | null; s
                 <Icon name="pin" />
               </span>
             </span>
-            <div className="min-w-0" aria-live="polite">
-              <div className="truncate text-[17px] font-bold">
-                {place?.address ?? (geocoding ? "Ünvan müəyyənləşdirilir…" : place ? "Ünvan tapılmadı" : "Yer seçilməyib")}
-              </div>
-              <div className="mt-0.5 truncate text-sm text-muted">
-                {place?.locality ?? (place ? `${place.lat.toFixed(5)}, ${place.lng.toFixed(5)}` : "")}
+            <div className="min-w-0 flex-1" aria-live="polite">
+              <label htmlFor="address" className="sr-only">
+                Ünvan
+              </label>
+              <input
+                id="address"
+                value={place?.address ?? ""}
+                maxLength={ADDRESS_MAX}
+                disabled={!place}
+                onChange={(e) => {
+                  const v = e.target.value.slice(0, ADDRESS_MAX);
+                  setPlace((p) => (p ? { ...p, address: v, addressEdited: true } : p));
+                }}
+                placeholder={geocoding ? "Ünvan müəyyənləşdirilir…" : place ? "Küçə, ev nömrəsi və ya yaxın obyekt" : "Yer seçilməyib"}
+                autoComplete="street-address"
+                enterKeyHint="done"
+                onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
+                className="block w-full rounded-xl border-2 border-line bg-surface px-3 py-2 text-[17px] font-bold text-ink outline-none placeholder:text-[15px] placeholder:font-semibold placeholder:text-subtle focus:border-primary"
+              />
+              <div className="mt-1 flex items-center gap-2 px-1 text-sm text-muted">
+                <span className="truncate">{place?.locality ?? (place ? `${place.lat.toFixed(5)}, ${place.lng.toFixed(5)}` : "")}</span>
+                {place?.addressEdited && place.autoAddress && place.autoAddress !== place.address && (
+                  <button
+                    type="button"
+                    onClick={() => setPlace((p) => (p ? { ...p, address: p.autoAddress ?? null, addressEdited: false } : p))}
+                    className="flex-none font-semibold text-primary-ink"
+                  >
+                    Avtomatik ünvan
+                  </button>
+                )}
               </div>
               {place?.source === "gps" && place.accuracy != null && place.accuracy > 150 ? (
                 // Zəif dəqiqlik (məs. Wi-Fi/IP üzrə yer) — istifadəçi pini özü dəqiqləşdirməlidir

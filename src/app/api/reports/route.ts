@@ -33,11 +33,18 @@ export const GET = handle(async (req: Request) => {
 const createSchema = latLngSchema.extend({
   category: z.enum(CATEGORY_KEYS),
   note: z.string().trim().max(280).default(""),
+  // İstifadəçinin əl ilə yazdığı ünvan (istəyə bağlı); boşdursa koordinatdan təyin olunur
+  address: z
+    .string()
+    .trim()
+    .max(120)
+    .transform((v) => v.replace(/\s+/g, " ") || undefined)
+    .optional(),
 });
 
 const VIDEO_TYPES = new Set(["video/mp4", "video/quicktime", "video/webm"]);
 
-/** POST /api/reports (multipart/form-data): category, note, lat, lng, media[] */
+/** POST /api/reports (multipart/form-data): category, note, lat, lng, address?, media[] */
 export const POST = handle(async (req: Request) => {
   const deviceId = await requireActiveDevice();
   await assertUnderRateLimit(deviceId);
@@ -48,6 +55,7 @@ export const POST = handle(async (req: Request) => {
     note: form.get("note") ?? "",
     lat: form.get("lat"),
     lng: form.get("lng"),
+    address: form.get("address") ?? undefined,
   });
 
   const files = form.getAll("media").filter((f): f is File => f instanceof File && f.size > 0);

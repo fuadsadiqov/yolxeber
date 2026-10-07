@@ -21,12 +21,15 @@ export async function createReport(input: {
   note: string;
   lat: number;
   lng: number;
+  /** İstifadəçinin əl ilə yazdığı ünvan — verilməyibsə koordinatdan təyin olunur */
+  address?: string;
   media: ProcessedMedia[];
 }): Promise<string> {
   const reportId = randomUUID();
-  // Ünvanı serverdə müəyyən edirik (müştəri mətni etibarlı deyil). Addım 2-də eyni nöqtə üçün
-  // artıq sorğu edildiyindən adətən keşdən gəlir.
+  // Rayon/şəhər həmişə koordinatdan (Nominatim, adətən addım 2-dən keşdə olur); küçə ünvanını
+  // istifadəçi düzəldibsə onun mətni saxlanılır.
   const geo = await reverseGeocode(input.lat, input.lng);
+  const address = input.address ?? geo.address;
 
   // Fayllar əvvəl diskə yazılır, sonra DB tranzaksiyası. Tranzaksiya alınmasa fayllar silinir.
   const rows = await Promise.all(
@@ -53,7 +56,7 @@ export async function createReport(input: {
         INSERT INTO reports (id, device_id, category, note, location, address, locality)
         VALUES (${reportId}::uuid, ${input.deviceId}::uuid, ${input.category}, ${input.note},
                 ST_SetSRID(ST_MakePoint(${input.lng}::float8, ${input.lat}::float8), 4326)::geography,
-                ${geo.address}, ${geo.locality})`;
+                ${address}, ${geo.locality})`;
       for (const x of rows) {
         await tx`
           INSERT INTO report_media (id, report_id, kind, storage_key, thumb_key, width, height, duration_ms, size_bytes, position)
