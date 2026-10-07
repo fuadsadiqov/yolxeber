@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
 import { api, ApiError } from "@/lib/client/api";
+import { track } from "@/lib/client/analytics";
 import { relativeTime } from "@/lib/format";
 import type { ReportDetail, ReportStatus } from "@/lib/types";
 import { CategoryLabel, STRIPES, StatusBadge } from "./bits";
@@ -49,6 +50,7 @@ export function SelectedCard({ id, onClose }: { id: string; onClose: () => void 
         json: { kind: "confirm" },
       });
       setR({ ...r, ...res, myVote: "confirm" });
+      track("vote", { kind: "confirm", category: r.category, source: "map_card" });
       toast("Təşəkkürlər! Təsdiqiniz qeydə alındı.", { icon: "check" });
     } catch (e) {
       toast(e instanceof ApiError ? e.message : "Xəta baş verdi");

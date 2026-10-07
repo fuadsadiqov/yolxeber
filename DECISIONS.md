@@ -4,6 +4,14 @@ Layihədəki əsas qərarlar və dəyişikliklər tarix üzrə. Ən yeni yazıla
 
 ---
 
+## 2026-10-07 — v1.2.0: Google Analytics 4
+
+- İstifadəçi GA4-ü seçdi (axın `G-C53R01SXJH`). Qoşulma `@next/third-parties/google` ilə edildi. SPA səhifə keçidləri GA4-ün "enhanced measurement" funksiyası ilə izlənir.
+- **ID kodda default kimi yazılıb**, `NEXT_PUBLIC_GA_ID` ilə dəyişdirilir, `off` ilə söndürülür. Səbəb: Docker build zamanı `.env` image-ə düşmür, `NEXT_PUBLIC_*` boş qalardı. GA ID gizli məlumat deyil, hər səhifənin mənbəyində görünür.
+- Yalnız production build-də yüklənir (dev/test trafiki statistikanı korlamır). İlk açılış `/admin` ilə olubsa yüklənmir.
+- Hadisələr: `report_created` (kateqoriya, media sayı, video), `report_edited`, `vote` (növ, mənbə: detail/map_card), `report_flagged`, `comment_posted`, `push_enabled`, `app_installed`, `open_external_map` (tətbiq), `share`. `track()` GA yüklənməyəndə (məs. reklam bloklayıcısı olanda) heç nə etmir və tətbiqi pozmur.
+- **Qeyd:** GA cookie istifadə edir. Saytın "anonim" konsepsiyası şəxsi məlumat toplamamağa aiddir, GA isə ümumi davranış statistikası toplayır. Gələcəkdə tələb olunarsa (məs. AB istifadəçiləri üçün), razılıq (consent) banneri əlavə etmək lazım ola bilər.
+
 ## 2026-10-07 — v1.1.0: "Hərəkət istiqaməti dəyişib" kateqoriyası
 
 - `istiqamet` dəyəri `drizzle/0004_direction_category.sql` ilə enum-a əlavə olundu (PGlite-da tranzaksiya daxilində yoxlanılıb).

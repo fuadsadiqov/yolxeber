@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { track } from "@/lib/client/analytics";
 
 /** Chromium-un quraşdırma hadisəsi (standart tiplərdə yoxdur) */
 type BeforeInstallPromptEvent = Event & {
@@ -68,6 +69,7 @@ export function InstallProvider({ children }: { children: React.ReactNode }) {
     setDeferred(null);
     early = null;
     if (outcome === "accepted") setInstalled(true);
+    track("app_installed", { outcome });
     return outcome;
   }, [deferred]);
 

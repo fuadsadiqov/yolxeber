@@ -9,6 +9,7 @@ import { CategoryIcon } from "@/components/report/bits";
 import { CATEGORIES, type CategoryKey } from "@/lib/categories";
 import { API_ERRORS } from "@/lib/types";
 import { reportTitle } from "@/lib/format";
+import { track } from "@/lib/client/analytics";
 import type { DraftMedia } from "@/lib/client/media";
 import { StepMedia } from "./StepMedia";
 import { StepLocation, type PickedPlace } from "./StepLocation";
@@ -88,6 +89,7 @@ export function NewReportFlow({ edit }: { edit?: EditInitial } = {}) {
     try {
       if (edit) {
         const r = await upload("PATCH", `/api/reports/${edit.id}`, form, setProgress);
+        track("report_edited", { category, votes_reset: !!r.votesReset });
         toast(r.votesReset ? "Dəyişikliklər saxlanıldı. Əsaslı dəyişiklik olduğu üçün təsdiqlər sıfırlandı." : "Dəyişikliklər saxlanıldı", {
           icon: "check",
         });
@@ -96,6 +98,7 @@ export function NewReportFlow({ edit }: { edit?: EditInitial } = {}) {
         return;
       }
       const { id } = await upload("POST", "/api/reports", form, setProgress);
+      track("report_created", { category, media_count: media.length, has_video: media.some((m) => m.kind === "video") });
       setCreated({ id, title: reportTitle(note, category), address: place.address?.trim() || null, category });
       setStep("done");
     } catch (e) {

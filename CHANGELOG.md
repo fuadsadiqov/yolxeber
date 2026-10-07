@@ -10,6 +10,12 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 
 ## [Buraxılmamış]
 
+## [1.2.0] — 2026-10-07
+
+### Əlavə olundu
+- Google Analytics 4 statistikası (`G-C53R01SXJH`): səhifə baxışları, sessiya müddəti, cihazlar, mənbələr. Yalnız production-da yüklənir, admin panel izlənmir.
+- Əsas əməliyyatlar üçün hadisələr: `report_created`, `report_edited`, `vote`, `report_flagged`, `comment_posted`, `push_enabled`, `app_installed`, `open_external_map`, `share`.
+
 ## [1.1.1] — 2026-10-07
 
 ### Dəyişdi
@@ -51,7 +57,8 @@ Texniki qərarların səbəbləri: [DECISIONS.md](DECISIONS.md).
 - Açıq və tünd tema, Poppins şrifti, Azərbaycan dilində interfeys.
 - Docker deploy: PostGIS, app, mövcud reverse proxy ilə inteqrasiya.
 
-[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.1...HEAD
+[Buraxılmamış]: https://github.com/fuadsadiqov/yolxeber/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/fuadsadiqov/yolxeber/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/fuadsadiqov/yolxeber/compare/v1.0.0...v1.0.1

@@ -11,6 +11,7 @@ import { Icon, type IconName } from "@/components/ui/Icon";
 import { Sheet } from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
 import { api, ApiError } from "@/lib/client/api";
+import { track } from "@/lib/client/analytics";
 import { distanceM, useGeo } from "@/lib/client/geo";
 import { CATEGORIES } from "@/lib/categories";
 import { formatDistance, relativeTime, reportDescription } from "@/lib/format";
@@ -59,6 +60,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         json: { kind },
       });
       setR((x) => ({ ...x, ...res, myVote: kind }));
+      track("vote", { kind, category: r.category, source: "detail" });
       toast(kind === "confirm" ? "Təşəkkürlər! Təsdiqiniz qeydə alındı." : "Qeyd olundu. Təşəkkürlər!", { icon: "check" });
     } catch (e) {
       toast(e instanceof ApiError ? e.message : "Xəta baş verdi");
@@ -69,6 +71,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
   }
 
   async function share() {
+    track("share", { method: "native" });
     if (navigator.share) {
       try {
         await navigator.share({ title: r.title, text: shareText, url: shareUrl });
@@ -328,6 +331,7 @@ export function ReportDetailView({ initial }: { initial: ReportDetail }) {
         onDone={() => {
           setFlagOpen(false);
           setR((x) => ({ ...x, myFlagged: true }));
+          track("report_flagged");
           toast("Şikayətiniz göndərildi. Təşəkkürlər!", { icon: "check" });
         }}
       />
@@ -372,6 +376,7 @@ function NavigateSection({ lat, lng, title }: { lat: number; lng: number; title:
             href={a.href}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("open_external_map", { app: a.label })}
             className="flex h-[3.25rem] items-center justify-center gap-2 rounded-[0.875rem] border border-line bg-surface px-2 text-sm font-semibold"
           >
             <span className="h-5 w-5 flex-none" style={{ color: a.color }}>

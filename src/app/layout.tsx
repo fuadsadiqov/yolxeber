@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@/components/layout/Analytics";
 import { InstallPrompt } from "@/components/layout/InstallPrompt";
 import { ThemeScript } from "@/components/layout/theme";
 import { ToastProvider } from "@/components/ui/Toast";
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ToastProvider>
               {children}
               <InstallPrompt />
+              <Analytics />
             </ToastProvider>
           </InstallProvider>
         </GeoProvider>

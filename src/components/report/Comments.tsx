@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
 import { api, ApiError, qs } from "@/lib/client/api";
+import { track } from "@/lib/client/analytics";
 import { relativeTime } from "@/lib/format";
 import type { CommentItem, CommentPage } from "@/lib/types";
 
@@ -52,6 +53,7 @@ export function Comments({ reportId }: { reportId: string }) {
       setItems((prev) => [c, ...(prev ?? [])]);
       setTotal((n) => n + 1);
       setText("");
+      track("comment_posted");
     } catch (err) {
       toast(err instanceof ApiError ? err.message : "Rəy göndərilmədi.");
     } finally {

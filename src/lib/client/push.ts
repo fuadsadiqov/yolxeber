@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/lib/client/api";
+import { track } from "@/lib/client/analytics";
 
 export type PushState = "unsupported" | "ios-install" | "denied" | "off" | "on";
 
@@ -39,6 +40,7 @@ export async function enablePush(): Promise<PushState> {
     sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(key) });
   }
   await api("/api/push/subscribe", { method: "POST", json: sub.toJSON() });
+  track("push_enabled");
   return "on";
 }
 
